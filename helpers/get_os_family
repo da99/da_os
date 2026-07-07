@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD  -- Print related family if available, or else the os name.
+
+case "$(get_os_name)" in
+fedora | almalinux)
+  echo "RHEL"
+  ;;
+*)
+  echo "$target_os"
+  ;;
+esac

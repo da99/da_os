@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+new_user="$1"
+
+if getent passwd "$new_user" >/dev/null ; then
+  tell "User exists: $new_user"
+else
+  tell "Creating user: $new_user"
+fi
+

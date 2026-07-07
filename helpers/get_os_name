@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD  -- Print ID= in /etc/os-release
+
+if ! test -e /etc/os-release; then
+  echo "UNKNOWN"
+  return 0
+fi
+
+grep -E '^ID=' /etc/os-release | cut -d'=' -f2

@@ -10,7 +10,8 @@ export ORIGIN_DIR="$PWD"
 cd "$(dirname "$THIS_SCRIPT")"
 cd ..
 
-PATH="$PATH:$PWD/helpers"
+
+PATH="$PATH:$PWD/bins"
 
 case "$*" in
   # doc: CMD -h|--help|help -- Show this message.

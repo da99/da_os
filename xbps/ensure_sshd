@@ -39,7 +39,7 @@ tmp_file="$(mktemp)"
 sed  "s|{{USER}}|${USER}|g; s|{{PORT}}|${PORT}|g" "$custom_sshd" > "$tmp_file"
 
 tell "diff $tmp_file $origin"
-if sudo diff "$tmp_file" "$origin"  ; then
+if diff "$tmp_file" "$origin"  ; then
   tell "sshd_config already setup."
   exit 0
 fi
@@ -53,16 +53,8 @@ sshd -t || {
     exit "$err_status"
 }
 
-case "$PORT" in
-  '22') : ;;
-  *)
-    tell "Allowing $PORT to be used by sshd via SELinux..."
-    sudo semanage port -a -t ssh_port_t -p tcp "$PORT"
-    ;;
-esac
-
 tell "Restarting sshd service..."
-sudo systemctl restart sshd
+sudo sv restart sshd
 
 tell "DONE"
 

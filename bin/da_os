@@ -11,17 +11,12 @@ cd "$(dirname "$THIS_SCRIPT")"/..
 export DA_OS_DIR="$PWD"
 export ORIGIN_PATH="$PATH"
 
-has() {
-  command -v "$1" >/dev/null
-}
-
 
 os_packager="unknown"
 os_nickname="unknown"
 
-
 for NICKNAME in dnf xbps-install apk ; do
-  if has "$NICKNAME" ; then
+  if command -v "$NICKNAME" >/dev/null  ; then
     os_packager="$NICKNAME"
     break
   fi
@@ -31,31 +26,53 @@ done
 case "$os_packager" in
   unknown)
     os_nickname="base"
-    SUB_PATH="$DA_OS_DIR/$os_nickname"
+    DA_OS_PATH="$DA_OS_DIR/$os_nickname"
     ;;
   xbps-install)
     os_nickname="xbps"
-    SUB_PATH="$DA_OS_DIR/$os_nickname:$DA_OS_DIR/base"
+    DA_OS_PATH="$DA_OS_DIR/$os_nickname:$DA_OS_DIR/base"
     ;;
   *)
     os_nickname="$os_packager"
-    SUB_PATH="$DA_OS_DIR/$os_nickname:$DA_OS_DIR/base"
+    DA_OS_PATH="$DA_OS_DIR/$os_nickname:$DA_OS_DIR/base"
     ;;
 esac
 
+extract_doc() {
+  grep -E '# +doc:' "$1" | sed "s/[#[:space:]]\+doc:/ / ; s/CMD/${cmd}/ ;"
+}
+
+find_cmds() {
+  find "$1"/ -maxdepth 1 -mindepth 1 -type f -executable -not -name '.*' -and -not -name '_*'
+}
+
 case "$*" in
-  # doc: CMD --help -- Show this message.
   "--help")
-    cmd="$(basename "$0")"
-    grep -E '# +doc:' "$0" | sed 's/#[[:space:]]\+doc:// ; s/CMD/'${cmd}'/'
+    echo "OS nickname: $os_nickname"
+    cmd="--help"
+    extract_doc "$0" || :
+    case "$os_nickname" in
+      base) : ;;
+      *)
+        cd "$DA_OS_DIR"
+        # while read -r FILE_PATH ; do
+        #   cmd="$(basename "$FILE_PATH")"
+        #   extract_doc "$FILE_PATH"
+        # done < <(find_cmds "$os_nickname")
+
+        while read -r SUB_CMD ; do
+          if test -x "$os_nickname/$SUB_CMD" ; then
+            FILE_PATH="$os_nickname/$SUB_CMD"
+          else
+            FILE_PATH="base/$SUB_CMD"
+          fi
+          cmd="$(basename "$FILE_PATH")"
+          extract_doc "$FILE_PATH" || { echo "  $SUB_CMD" ; }
+        done < <({ find_cmds "base"; find_cmds "$os_nickname"; } | xargs -n 1 basename | sort )
+        ;;
+    esac
     exit 0
     ;;
-
-  # doc: CMD paths -- Prints a PATH= string to use as your new PATH.
-  paths)
-  echo "$SUB_PATH"
-  exit 0
-  ;;
 esac
 
 # target_os="$(get_os_name)"
@@ -63,6 +80,7 @@ esac
 
 # echo "$target_os of $target_family" >&2
 
-PATH="$PATH:$SUB_PATH"
+export DA_OS_PATH
+PATH="$PATH:$DA_OS_PATH"
 "$@"
 

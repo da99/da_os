@@ -3,5 +3,6 @@
 #
 set -u -e
 
+# doc: CMD  ...args...
 # echo -e '-- \e[1m'"$*"'\e[0m' >&2
 printf "%s %s%s%s\n" "--" "$(tput bold)$(tput setaf 2)" "$*" "$(tput sgr0)" >&2

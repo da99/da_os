@@ -3,4 +3,5 @@
 #
 set -u -e
 
+# doc: CMD ...args...
 printf "%s %s%s%s\n" "!!" "$(tput setaf 1)" "$*" "$(tput sgr0)" >&2

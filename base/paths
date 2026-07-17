@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Prints a PATH= string to use as your new PATH.
+echo "$DA_OS_PATH"

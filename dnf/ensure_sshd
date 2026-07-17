@@ -4,7 +4,6 @@
 set -u -e -o pipefail
 
 case "$*" in
-  # doc: CMD --help -- Show this message.
   "--help")
     cmd="$(basename "$0")"
     grep -E '# +doc:' "$0" | sed 's/#[[:space:]]\+doc:// ; s/CMD/'${cmd}'/'

@@ -15,20 +15,33 @@ has() {
   command -v "$1" >/dev/null
 }
 
-SUB_PATH=""
-if has dnf ; then
-  SUB_PATH="$SUB_PATH:$DA_OS_DIR/dnf"
-fi
 
-if has xbps-install ; then
-  SUB_PATH="$SUB_PATH:$DA_OS_DIR/xbps"
-fi
+os_packager="unknown"
+os_nickname="unknown"
 
-if has apk ; then
-  SUB_PATH="$SUB_PATH:$DA_OS_DIR/apk"
-fi
 
-SUB_PATH="$SUB_PATH:$DA_OS_DIR/base"
+for NICKNAME in dnf xbps-install apk ; do
+  if has "$NICKNAME" ; then
+    os_packager="$NICKNAME"
+    break
+  fi
+done
+
+# === Handle special cases:
+case "$os_packager" in
+  unknown)
+    os_nickname="base"
+    SUB_PATH="$DA_OS_DIR/$os_nickname"
+    ;;
+  xbps-install)
+    os_nickname="xbps"
+    SUB_PATH="$DA_OS_DIR/$os_nickname:$DA_OS_DIR/base"
+    ;;
+  *)
+    os_nickname="$os_packager"
+    SUB_PATH="$DA_OS_DIR/$os_nickname:$DA_OS_DIR/base"
+    ;;
+esac
 
 case "$*" in
   # doc: CMD --help -- Show this message.
@@ -44,26 +57,6 @@ case "$*" in
   exit 0
   ;;
 esac
-
-get_script_name() {
-  if test -e "$target_os/$1" ; then
-    echo "$target_os/$1"
-    return 0
-  fi
-
-  if test -e "$target_family/$1" ; then
-    echo "$target_family/$1"
-    return 0
-  fi
-
-  if test -e "base/$1" ; then
-    echo "base/$1"
-    return 0
-  fi
-
-  echo "!!! Script not found in $PWD: $1" >&2
-  exit 2
-}
 
 # target_os="$(get_os_name)"
 # target_family="$(get_os_family)"

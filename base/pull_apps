@@ -13,7 +13,7 @@ while read -r DIR; do
   fi
   echo
   tell "$PWD ==="
-  if test -z "${IS_DEV:-}"; then
+  if ! is_dev; then
     git pull
   fi
 done < <(

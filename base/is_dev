@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Exit 0 is IS_DEV is set, Exit 1 otherwise.
+
+test -n "${IS_DEV:-}"

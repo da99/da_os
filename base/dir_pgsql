@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Upserts PG_HOME
+# doc:     Uses: PG_HOME
+
+if test -z "${PG_HOME:-}"; then
+  err "PG_HOME not set."
+  exit 1
+fi
+
+if test -e "$PG_HOME"; then
+  tell "Already created: $PG_HOME"
+else
+  tell "Creating: $PG_HOME"
+  sudo mkdir -p "$PG_HOME"
+  sudo chown -R postgres:postgres "$PG_HOME"
+fi
+
+ensure_perms 700 "$PGDATA"

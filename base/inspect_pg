@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Show env vars used by PG.
+
+echo "PGDATA:    $PGDATA"
+echo "PG_HOME:   $PG_HOME"

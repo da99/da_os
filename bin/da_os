@@ -3,14 +3,17 @@
 #
 set -u -e -o pipefail
 
+if test -e ".env" ; then
+  set -a
+  source ".env"
+  set +a
+fi
+
 THIS_SCRIPT="$0"
-
 export ORIGIN_DIR="$PWD"
-
 cd "$(dirname "$THIS_SCRIPT")"/..
 export DA_OS_DIR="$PWD"
 export ORIGIN_PATH="$PATH"
-
 
 os_packager="unknown"
 os_nickname="unknown"
@@ -82,5 +85,6 @@ esac
 
 export DA_OS_PATH
 PATH="$PATH:$DA_OS_PATH"
+
 "$@"
 

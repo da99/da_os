@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD  USERNAME  DIR  -- Exits 0 if owner of DIR == USERNAME. Exits 1 otherwise.
+
+target_owner="$1"
+target="$2"
+
+test -e "$target"
+
+current_owner="$(stat -c '%U' "$target")"
+
+[[ "$current_owner" = "$target_owner" ]]

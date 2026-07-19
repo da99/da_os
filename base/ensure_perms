@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD 7xx DIR -- Ensures directory has right perms.
+
+right_perms="$1"
+target="$2"
+
+case "$(stat -c '%a' "$target")" in
+"$right_perms")
+  tell "$target is $right_perms"
+  ;;
+
+*)
+  tell "Changing permissions of $targert to ${right_perms}..."
+  if is_owner "$USER" "$target"; then
+    chmod "$right_perms" "$target"
+  else
+    sudo chmod "$right_perms" "$target"
+  fi
+  ;;
+esac

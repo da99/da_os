@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Upserts PGDATA
+# doc:     Uses: PGDATA
+
+if test -z "${PGDATA:-}"; then
+  err "PGDATA not set."
+  exit 1
+fi
+
+if test -e "$PGDATA"; then
+  tell "Already created: $PGDATA"
+else
+  tell "Creating: $PGDATA"
+  sudo mkdir -p "$PGDATA"
+  sudo chown -R postgres:postgres "$PGDATA"
+fi
+
+ensure_perms 700 "$PGDATA"

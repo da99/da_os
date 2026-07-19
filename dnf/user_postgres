@@ -4,9 +4,8 @@
 set -u -e -o pipefail
 
 # doc: CMD -- Upserts system user postgres.
-# doc:     Uses: PGDATA, PG_HOME
+# doc:     Uses: PG_HOME
 
-PGDATA="${PGDATA:-/data/pgsql/data}"
 PG_HOME="${PG_HOME:-/home/postgres}"
 
 # --------------------------------------------------------
@@ -15,7 +14,7 @@ if getent group postgres &>/dev/null ; then
   tell "postgres group exists."
 else
   tell "Creating postgres group"
-  sudo addgroup --system postgres
+  sudo groupadd --system postgres
 fi
 # --------------------------------------------------------
 
@@ -28,29 +27,16 @@ else
   sudo useradd \
     --system \
     --create-home \
-    --home-dir "$PG_HOME"
+    --home-dir "$PG_HOME" \
     --shell /sbin/nologin \
     --gid postgres \
     postgres
 fi
 # --------------------------------------------------------
 
-if test "$PGDATA" ; then
-  tell "Already created: $PGDATA"
-else
-  tell "Creating: $PGDATA"
-  sudo mkdir -p "$PGDATA"
-  sudo chown -R postgres:postgres "$PGDATA"
-fi
 
-ensure_perms 700 "$PGDATA"
-ensure_perms 700 "$(dirname "$PGDATA")"
-
-
-
-set -x
 getent passwd postgres
 getent group  postgres
 id postgres
 
-sudo chmod go-rwx "$PG_HOME"
+ensure_perms 700 "$PG_HOME"

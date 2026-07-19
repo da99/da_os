@@ -8,13 +8,18 @@ set -u -e
 right_perms="$1"
 target="$2"
 
+test -e "$target" || {
+  err "Does not exist: $target"
+  exit 1
+}
+
 case "$(stat -c '%a' "$target")" in
 "$right_perms")
   tell "$target is $right_perms"
   ;;
 
 *)
-  tell "Changing permissions of $targert to ${right_perms}..."
+  tell "Changing permissions of $target to ${right_perms}..."
   if is_owner "$USER" "$target"; then
     chmod "$right_perms" "$target"
   else

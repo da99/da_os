@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD VERSION HOST -- Packs directory to single file, uploads to /progs/pg, unpacks via SSH.
+
+version="$1"
+ssh_host="$2"
+final_file="${version}.tar.gz"
+
+cd /progs/pg/"$version"/..
+
+# if ! test -e "$final_file"; then
+#   tar -czvf "$final_file" "$version"/
+# fi
+
+# Because of SELinux file creation policies, it is best to de-compress in $HOME
+# and then move the directory to /progs/pg:
+set -x
+tar -cz -C /progs/pg "$version" | ssh "$ssh_host" "tar -xz -C \$HOME && mv \$HOME/$version /progs/pg/"

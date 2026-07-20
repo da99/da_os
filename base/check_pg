@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# doc: CMD VERSION -- Runs some checks for PG-related binaries.
+set -u -e
+
+version="$1"
+
+cd "/progs/pg/$version"
+set -x
+export LD_LIBRARY_PATH="$PWD/lib"
+ldd bin/postgres
+ldd bin/psql
+readelf -d bin/postgres | grep -E 'RPATH|RUNPATH'
+readelf -d bin/psql | grep -E 'RPATH|RUNPATH'
+readelf -d lib/libpq.so.5 | grep -E 'RPATH|RUNPATH'

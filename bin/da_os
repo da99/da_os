@@ -88,5 +88,22 @@ esac
 export DA_OS_PATH
 PATH="$PATH:$DA_OS_PATH"
 
+export PG_VERSION="${PG_VERSION:-18}"
+if test -e /data/pgsql ; then
+  export PGDATA="${PGDATA:-/data/pgsql/data}"
+  export PGHOST-"${PGHOST:-/data/pgsql/tmp}"
+  export PG_HOME="${PG_HOME:-/home/postgres}"
+else
+  export PGDATA="${PGDATA:-/progs/pg/$PG_VERSION/data}"
+  export PGHOST="${PGHOST:-/progs/pg/$PG_VERSION/tmp}"
+  export PG_HOME="${PG_HOME:-/progs/pg}"
+fi
+
+for v in 18 19 ; do
+  if test -e "/usr/pgsql-${v}/bin" ; then
+    PATH="/usr/pgsql-${v}/bin:$PATH"
+  fi
+done
+
 "$@"
 

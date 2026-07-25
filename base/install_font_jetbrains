@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Installs NerdFont patched JetBrains font.
+
+target_dir="$HOME/.local/share/fonts/JetBrainsMono"
+
+if test -e "$target_dir"; then
+  tell "Already installed nerd font: JetBrains Mono"
+  exit 0
+fi
+
+set -x
+mkdir -p "$target_dir"
+cd "$target_dir"
+
+url="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip"
+wget "$url"
+unzip "$(basename "$url")"
+rm "$(basename "$url")"
+fc-cache -fv

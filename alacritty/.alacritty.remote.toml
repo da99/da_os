@@ -1,0 +1,78 @@
+# Colors (Night Owlish Light)
+
+[colors.primary]
+background = '#ffffff'
+foreground = '#403f53'
+
+[colors.normal]
+black = '#011627'
+red = '#d3423e'
+green = '#2aa298'
+yellow = '#daaa01'
+blue = '#4876d6'
+magenta = '#403f53'
+cyan = '#08916a'
+white = '#7a8181'
+
+[colors.bright]
+black = '#7a8181'
+red = '#f76e6e'
+green = '#49d0c5'
+yellow = '#dac26b'
+blue = '#5ca7e4'
+magenta = '#697098'
+cyan = '#00c990'
+white = '#989fb1'
+
+[colors.cursor]
+cursor = '#403f53'
+text = '#fbfbfb'
+
+[colors.selection]
+background = '#f2f2f2'
+text = '#403f53'
+
+[font]
+size = 11.0
+
+[font.bold]
+family = "SauceCodeProNerdFontMono"
+style = "Bold"
+
+[font.bold_italic]
+family = "SauceCodeProNerdFontMono"
+style = "Bold Italic"
+
+[font.italic]
+family = "SauceCodeProNerdFontMono"
+style = "Italic"
+
+[font.normal]
+family = "SauceCodeProNerdFontMono"
+style = "Regular"
+
+[[hints.enabled]]
+command = "xdg-open"
+hyperlinks = true
+post_processing = true
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-<>\"\\s{-}\\^⟨⟩`]+"
+
+[hints.enabled.mouse]
+enabled = true
+mods = "Shift"
+
+[[mouse.bindings]]
+action = "Copy"
+mouse = "Right"
+
+[[mouse.bindings]]
+action = "ClearSelection"
+mouse = "Right"
+
+[[mouse.bindings]]
+action = "Paste"
+mods = "Control"
+mouse = "Right"
+
+[selection]
+save_to_clipboard = false

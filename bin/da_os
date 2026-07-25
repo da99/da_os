@@ -99,11 +99,18 @@ else
   export PG_HOME="${PG_HOME:-/progs/pg}"
 fi
 
+if test -e /progs/pg ; then
+  while read -r bin ; do
+    PATH="${bin}:$PATH"
+  done < <(find /progs/pg -maxdepth 2 -mindepth 2 -type d -name bin)
+fi
+
 for v in 18 19 ; do
   if test -e "/usr/pgsql-${v}/bin" ; then
     PATH="/usr/pgsql-${v}/bin:$PATH"
   fi
 done
+
 
 "$@"
 

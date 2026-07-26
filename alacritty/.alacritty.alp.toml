@@ -37,19 +37,19 @@ white   = '#FEFEF8'
 size = 11.0
 
 [font.bold]
-family = "SauceCodeProNerdFontMono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "SauceCodeProNerdFontMono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "SauceCodeProNerdFontMono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Italic"
 
 [font.normal]
-family = "SauceCodeProNerdFontMono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Regular"
 
 [[hints.enabled]]

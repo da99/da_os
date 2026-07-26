@@ -81,19 +81,19 @@ white = '#ACB0BE' # surface2
 size = 12.0
 
 [font.bold]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Italic"
 
 [font.normal]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Regular"
 
 [[hints.enabled]]

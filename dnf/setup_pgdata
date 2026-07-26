@@ -18,5 +18,11 @@ fi
 
 if [ -z "$(find "$PGDATA" -mindepth 1 -maxdepth 1 2>/dev/null)" ]; then
   tell "As postgres, initializing $PGDATA"
-  sudo -u postgres initdb -D "$PGDATA"
+  sudo -u postgres "$DA_OS_BIN" initdb \
+    --auth-local=peer   \
+    --auth-host=reject  \
+    --data-checksums    \
+    --encoding=UTF8     \
+    --locale=C.UTF-8    \
+    -D "$PGDATA"
 fi

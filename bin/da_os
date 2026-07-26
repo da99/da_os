@@ -101,7 +101,6 @@ fi
 
 if test -e "/usr/pgsql-${PG_VERSION}/bin" ; then
   PATH="/usr/pgsql-${PG_VERSION}/bin:$PATH"
-  break
 else
   if test -e /progs/pg ; then
     while read -r bin ; do

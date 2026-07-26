@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Prints the PGDG repo for dnf-based OSes. Uses: da_os name
+
+major_name="$(name)"
+major_ver="$(name major)"
+arch="$(uname -m)"
+
+case "$major_name" in
+'fedora')
+  echo "https://download.postgresql.org/pub/repos/yum/reporpms/F-${major_ver}-${arch}/pgdg-fedora-repo-latest.noarch.rpm"
+  ;;
+
+'almalinux')
+  echo "https://download.postgresql.org/pub/repos/yum/reporpms/EL-${major_ver}-${arch}/pgdg-redhat-repo-latest.noarch.rpm"
+  ;;
+
+*)
+  err "Unknown dnf OS: $major_name"
+  exit 1
+  ;;
+esac

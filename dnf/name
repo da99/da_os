@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD               -- Prints out the name of the OS.
+# doc: CMD major
+# doc: CMD arch
+
+case "$*" in
+'')
+  . /etc/os-release
+  echo "$ID"
+  ;;
+
+major)
+  . /etc/os-release
+  echo "${VERSION_ID%%.*}"
+  ;;
+
+minor)
+  . /etc/os-release
+  case "$VERSION_ID" in
+  *.*)
+    echo "${VERSION_ID#*.}"
+    ;;
+  *)
+    echo ""
+    ;;
+  esac
+  ;;
+
+arch)
+  uname -m
+  ;;
+esac

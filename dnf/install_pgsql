@@ -15,7 +15,7 @@ if rpm -q pgdg-redhat-repo ; then
 else
   arch="$(uname -m)"
   major_version="$(rpm -E %{rhel})"
-  repo_url="https://download.postgresql.org/pub/repos/yum/reporpms/EL-${major_version}-${arch}/pgdg-redhat-repo-latest.noarch.rpm"
+  repo_url="$(pgsql_repo)"
   tell "Installing PGDG repo: $repo_url ..."
   sudo dnf install "$repo_url"
 fi

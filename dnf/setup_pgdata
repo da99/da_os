@@ -1,0 +1,22 @@
+#!/bin/zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Sets up $PGDATA directory if it is empty.
+
+if ! id postgres; then
+  user_postgres
+fi
+
+if [ ! -d "$PGDATA" ]; then
+  tell "Creating $PGDATA"
+  sudo mkdir -p "$PGDATA"
+  sudo chown postgres:postgres "$PGDATA"
+  sudo chmod 700 "$PGDATA"
+fi
+
+if [ -z "$(find "$PGDATA" -mindepth 1 -maxdepth 1 2>/dev/null)" ]; then
+  tell "As postgres, initializing $PGDATA"
+  sudo -u postgres initdb -D "$PGDATA"
+fi

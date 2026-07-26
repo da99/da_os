@@ -5,10 +5,11 @@ set -u -e
 
 # doc: CMD -- Show env vars used by PG.
 
-echo "PGDATA:    $PGDATA"
-echo "PGHOST:    $PGHOST"
-echo "PG_HOME:   $PG_HOME"
-echo "USER:      $USER"
-echo "whoami:    $(whoami)"
-echo "HOME:      $HOME"
-echo "PATH:      $PATH"
+echo "PGDATA:     $PGDATA"
+echo "PGHOST:     $PGHOST"
+echo "PG_VERSION: $PG_VERSION"
+echo "PG_HOME:    $PG_HOME"
+echo "USER:       $USER"
+echo "whoami:     $(whoami)"
+echo "HOME:       $HOME"
+echo "PATH:       $PATH"

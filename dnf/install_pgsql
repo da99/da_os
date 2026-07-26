@@ -10,11 +10,11 @@ pkg_version="${1:-18}"
 pkg="${pkg_name}${pkg_version}"
 
 tell "Setting up $pkg_name $pkg_version"
-if rpm -q pgdg-redhat-repo ; then
+
+if dnf repolist --enabled | grep -i pgdg-common >/dev/null ; then
   tell "$pkg_name repo already installed."
 else
   arch="$(uname -m)"
-  major_version="$(rpm -E %{rhel})"
   repo_url="$(pgsql_repo)"
   tell "Installing PGDG repo: $repo_url ..."
   sudo dnf install "$repo_url"

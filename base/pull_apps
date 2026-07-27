@@ -13,9 +13,7 @@ while read -r DIR; do
   fi
   echo
   tell "$PWD ==="
-  if ! is_dev; then
-    git pull
-  fi
+  git pull
 done < <(
   find /apps/ -maxdepth 1 -mindepth 1 -type d -not -name '*+*' -and -not -name '.*'
   echo "$HOME"

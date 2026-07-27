@@ -6,6 +6,10 @@ set -u -e
 # doc: CMD -- Install base apps: tmux, htop, etc.
 
 set -x
+
+tell "Setting timezone: America/Chicago"
+sudo timedatectl set-timezone America/Chicago
+
 sudo dnf install tmux git htop zsh
 
 install_pgsql

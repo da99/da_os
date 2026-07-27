@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD wheel|postgres -- Add current user to a group unless already in group.
+
+target="$1"
+case "$target" in
+  wheel|postgres)
+    :
+    ;;
+  *)
+    err "Unknown group: $target"
+    exit 1
+    ;;
+esac
+
+if id -nG "$USER" | tr ' ' '\n' | grep -qx "$target"; then
+  tell "$USER is already in group: $target"
+else
+  tell "Adding $USER to ${target}..."
+  sudo usermod -aG "$target" "$USER"
+fi

@@ -14,6 +14,11 @@ export ORIGIN_DIR="$PWD"
 export DA_OS_DIR="$(cd "$(dirname "$0")"/.. && echo "$PWD")"
 export ORIGIN_PATH="$PATH"
 
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_COLLATE="${LC_COLLATE:-en_US.UTF-8}"
+export LC_CTYPE="${LC_CTYPE:-en_US.UTF-8}"
+export TZ="${TZ:-America/Chicago}"
+
 os_packager="unknown"
 os_nickname="unknown"
 

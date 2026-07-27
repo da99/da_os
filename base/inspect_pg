@@ -9,6 +9,12 @@ echo "PGDATA:     $PGDATA"
 echo "PGHOST:     $PGHOST"
 echo "PG_VERSION: $PG_VERSION"
 echo "PG_HOME:    $PG_HOME"
+echo
+echo "LANG:       $LANG"
+echo "LC_COLLATE: $LC_COLLATE"
+echo "LC_CTYPE:   $LC_CTYPE"
+echo "TZ:         $TZ"
+echo
 echo "USER:       $USER"
 echo "whoami:     $(whoami)"
 echo "HOME:       $HOME"

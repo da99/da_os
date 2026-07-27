@@ -1,0 +1,20 @@
+#!/bin/zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Sets up $PGHOST directory if it is empty.
+
+if ! id postgres; then
+  user_postgres
+fi
+
+if [ ! -d "$PGHOST" ]; then
+  tell "Creating $PGHOST"
+  sudo mkdir -p "$PGHOST"
+fi
+
+tell "Ensuring permissions..."
+set -x
+sudo chown postgres:postgres "$PGHOST"
+sudo chmod 0770 "$PGHOST"

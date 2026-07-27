@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Installs pg_hba.conf and postgresql.conf, if needed.
+
+tell "Changing to: $HOME/config/pgsql"
+cd "$HOME"/config/pgsql
+
+for c in pg_hba.conf postgresql.conf ; do
+  if ! [[ -e "$c" ]] ; then
+    err "File not found: $PWD/$c"
+    exit 1
+  fi
+
+  target="$PGDATA/$c"
+  tell "Checking diff: $c -> $target"
+  if sudo diff "$c" "$target" ; then
+    tell "File already installed: $c"
+    continue
+  fi
+
+  tell "Installing: $target"
+  sudo install -o postgres -g postgres -m 0600 "$c" "$target"
+done
+

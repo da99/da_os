@@ -9,14 +9,10 @@ if test -e ".env" ; then
   set +a
 fi
 
-THIS_SCRIPT="$0"
-export ORIGIN_DIR="$PWD"
-cd "$(dirname "$THIS_SCRIPT")"/..
-export DA_OS_DIR="$PWD"
 export DA_OS_BIN="$0"
+export ORIGIN_DIR="$PWD"
+export DA_OS_DIR="$(cd "$(dirname "$0")"/.. && echo "$PWD")"
 export ORIGIN_PATH="$PATH"
-
-cd "$ORIGIN_DIR"
 
 os_packager="unknown"
 os_nickname="unknown"

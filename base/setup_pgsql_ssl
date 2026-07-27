@@ -1,0 +1,77 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+case "$(whoami)" in
+  postgres)
+    :
+    ;;
+  *)
+    tell "Switching to postgres user..."
+    sudo -u postgres "$DA_OS_BIN" "$(basename "$0")" "$@"
+    exit 0
+    ;;
+esac
+
+# docs: CMD -- Creates and installs files to PGDATA.
+
+tell "Switching to ${PGDATA}..."
+cd "$PGDATA"
+
+tell "Checking existance of SSL files..."
+if [[ -e "root.key" || -e "server.key" ]]  ; then
+  tell "Already setup: ssl files"
+  exit 0
+fi
+
+# === CREATE FILES ===
+tell "Creating files"
+
+mkdir -p ssltmp
+rm -f ssltmp/*
+cd ssltmp
+
+tell "Generating unencrypted Root CA Authority assets..."
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+  -keyout root.key -out root.crt \
+  -subj "/CN=hetzner-pg-ca"
+
+tell "Generating unencrypted Server Key assets..."
+openssl req -new -newkey rsa:4096 -nodes \
+  -subj "/CN=10.0.0.3" \
+  -keyout server.key \
+  -out server.csr
+
+cat > server.ext <<'EOF'
+basicConstraints=CA:FALSE
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+keyUsage=digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectAltName=IP:10.0.0.3
+EOF
+
+tell "Signing server certificate with local root CA..."
+openssl x509 -req -in server.csr \
+  -CA root.crt -CAkey root.key -CAcreateserial \
+  -days 3650 -sha256 \
+  -extfile server.ext \
+  -out server.crt
+
+rm -f server.csr server.ext root.srl
+
+# 4) Lock down permissions
+
+tell "Changing permissions..."
+chmod 600 server.key root.key
+chmod 644 server.crt root.crt
+
+tell "Migrating secure cryptographic targets into $PGDATA/"
+mv  server.key server.crt root.crt "$PGDATA"/
+cd "$PGDATA"
+rm -rf ssltmp
+
+
+tell "Ensuring 700 for $PGDATA"
+chmod 700 "$PGDATA"

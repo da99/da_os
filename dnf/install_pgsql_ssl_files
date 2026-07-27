@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Using "install", installs certs/keys to PGDATA from current dir.
+
+for x in server.key root.key server.crt root.crt; do
+  if [[ -e "$x" ]]; then
+    err "File not found: $x"
+    exit 1
+  fi
+done
+
+sudo install -o postgres -g postgres -m 0600 server.key "$PGDATA/server.key"
+sudo install -o postgres -g postgres -m 0644 server.crt "$PGDATA/server.crt"
+sudo install -o postgres -g postgres -m 0644 root.crt "$PGDATA/root.crt"

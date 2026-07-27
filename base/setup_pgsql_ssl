@@ -3,21 +3,8 @@
 #
 set -u -e -o pipefail
 
-case "$(whoami)" in
-  postgres)
-    :
-    ;;
-  *)
-    tell "Switching to postgres user..."
-    sudo -u postgres "$DA_OS_BIN" "$(basename "$0")" "$@"
-    exit 0
-    ;;
-esac
 
-# docs: CMD -- Creates and installs files to PGDATA.
-
-tell "Switching to ${PGDATA}..."
-cd "$PGDATA"
+# doc: CMD -- Creates and installs files to PGDATA.
 
 tell "Checking existance of SSL files..."
 if [[ -e "root.key" || -e "server.key" ]]  ; then
@@ -25,17 +12,19 @@ if [[ -e "root.key" || -e "server.key" ]]  ; then
   exit 0
 fi
 
+printf "Enter CA passphrase: "
+read -rs ROOTPASS
+printf "\n"
+export ROOTPASS
+
 # === CREATE FILES ===
 tell "Creating files"
 
-mkdir -p ssltmp
-rm -f ssltmp/*
-cd ssltmp
-
 tell "Generating unencrypted Root CA Authority assets..."
-openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 \
   -keyout root.key -out root.crt \
-  -subj "/CN=hetzner-pg-ca"
+  -subj "/CN=hetzner-pg-ca" \
+  -passout env:ROOTPASS
 
 tell "Generating unencrypted Server Key assets..."
 openssl req -new -newkey rsa:4096 -nodes \
@@ -57,21 +46,24 @@ openssl x509 -req -in server.csr \
   -CA root.crt -CAkey root.key -CAcreateserial \
   -days 3650 -sha256 \
   -extfile server.ext \
+  -passin env:ROOTPASS \
   -out server.crt
+unset ROOTPASS
 
 rm -f server.csr server.ext root.srl
 
 # 4) Lock down permissions
 
 tell "Changing permissions..."
+ls -al
 chmod 600 server.key root.key
 chmod 644 server.crt root.crt
 
-tell "Migrating secure cryptographic targets into $PGDATA/"
-mv  server.key server.crt root.crt "$PGDATA"/
-cd "$PGDATA"
-rm -rf ssltmp
-
-
-tell "Ensuring 700 for $PGDATA"
-chmod 700 "$PGDATA"
+# tell "Migrating secure cryptographic targets into $PGDATA/"
+# mv  server.key server.crt root.crt "$PGDATA"/
+# cd "$PGDATA"
+# rm -rf ssltmp
+#
+#
+# tell "Ensuring 700 for $PGDATA"
+# chmod 700 "$PGDATA"

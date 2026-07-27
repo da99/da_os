@@ -16,6 +16,8 @@ export DA_OS_DIR="$PWD"
 export DA_OS_BIN="$0"
 export ORIGIN_PATH="$PATH"
 
+cd "$ORIGIN_DIR"
+
 os_packager="unknown"
 os_nickname="unknown"
 

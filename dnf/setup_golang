@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD
+
+set -x
+mise use --global go@latest
+go install golang.org/x/tools/gopls@latest
+go install golang.org/x/tools/cmd/goimports@latest
+go install mvdan.cc/gofumpt@latest
+go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+set +x
+
+echo "Enable  LazyExtra go in Neovim." >&2

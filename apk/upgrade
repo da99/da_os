@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Upgrade packages
+
+set -x
+doas apk update
+doas apk upgrade

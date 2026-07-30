@@ -4,4 +4,5 @@
 set -u -e
 
 # doc: CMD ...args...
-printf "%s %s%s%s\n" "!!" "$(tput setaf 1)" "$*" "$(tput sgr0)" >&2
+
+echo -e '!! \033[1;38;5;1mERROR:\033[0m' "$*"

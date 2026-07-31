@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Installs fonts for the browser.
+
+sudo xbps-install -S noto-fonts-emoji noto-fonts-cjk noto-fonts-ttf
+sudo fc-cache -fv

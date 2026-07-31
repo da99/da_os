@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD -- Installs packages for a GUI desktop.
+packages=$(
+  cat <<'EOF'
+fish-shell htop git openbox obconf caja xorg xfce4-panel alacritty sxhkd ripgrep neovim zsh feh elogind dbus eza nix
+wmctrl xtitle xdotool xwininfo wget curl
+xclip picom pipewire libspa-bluetooth
+NetworkManager network-manager-applet  tailscale
+bluez blueman flameshot
+  qbittorrent
+  ghostty tmux
+
+xfce4-docklike-plugin
+ xfce4-cpufreq-plugin
+ xfce4-pulseaudio-plugin
+ xfce4-sensors-plugin
+   xfce4-cpugraph-plugin
+ xfce4-datetime-plugin
+ xfce4-diskperf-plugin
+ xfce4-docklike-plugin
+   xfce4-fsguard-plugin
+ xfce4-genmon-plugin
+  xfce4-genmon-plugin
+ xfce4-mpc-plugin
+ xfce4-netload-plugin
+ xfce4-sensors-plugin
+ xfce4-systemload-plugin
+ xfce4-whiskermenu-plugin
+EOF
+)
+
+set -x
+sudo xbps-install -S $packages

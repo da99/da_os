@@ -6,14 +6,16 @@ set -u -e
 # doc: CMD -- Installs packages for a GUI desktop.
 packages=$(
   cat <<'EOF'
-fish-shell htop git openbox obconf caja xorg xfce4-panel alacritty sxhkd ripgrep neovim zsh feh elogind dbus eza nix
+fish-shell htop git nemo xorg
+ alacritty sxhkd ripgrep neovim zsh feh elogind dbus eza nix
 wmctrl xtitle xdotool xwininfo wget curl
 xclip picom pipewire libspa-bluetooth
 NetworkManager network-manager-applet  tailscale
 bluez blueman flameshot
+  openbox obconf lxappearance-obconf
   qbittorrent
   ghostty tmux
-  smplayer
+  smplayer mpv
   thunderbird
   lxappearance
   arc-theme
@@ -21,7 +23,11 @@ bluez blueman flameshot
   bat
   fzf
   jq
-
+  arc-theme
+  arc-icon-theme
+  papirus-icon-theme
+  font-inter
+ xfce4-panel 
 xfce4-docklike-plugin
  xfce4-cpufreq-plugin
  xfce4-pulseaudio-plugin

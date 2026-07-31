@@ -20,6 +20,7 @@ bluez blueman flameshot
   tree
   bat
   fzf
+  jq
 
 xfce4-docklike-plugin
  xfce4-cpufreq-plugin

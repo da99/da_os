@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# Ensure directories are handled by Nemo
+xdg-mime default nemo.desktop inode/directory
+
+# Also handle some common directory-like MIME types if present
+xdg-mime default nemo.desktop application/x-directory
+xdg-mime default nemo.desktop application/x-gnome-saved-search

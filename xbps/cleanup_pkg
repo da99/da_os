@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Cleans package cache.
+
+tell "Removing old package cache..."
+sudo xbps-remove -yOo
+

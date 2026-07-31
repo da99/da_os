@@ -12,8 +12,8 @@ wmctrl xtitle xdotool xwininfo wget curl
 xclip picom pipewire libspa-bluetooth
 NetworkManager network-manager-applet  tailscale
 bluez blueman flameshot
-  openbox obconf lxappearance-obconf
-  qbittorrent
+  openbox obconf lxappearance-obconf obmenu-generator
+  qbittorrent rofi
   ghostty tmux
   smplayer mpv
   thunderbird

@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Cleans up /boot/efi
+
+df_usage="$(df | grep --color=never "% /boot/efi" || : )"
+if test -z "$df_usage" ; then
+  err "/boot/efi disk usage not found."
+  exit 1
+fi
+
+efi_usage="$(echo "$df_usage" | tr -s ' ' | cut -d' ' -f5 | tr -d '%')"
+if test "$efi_usage" -gt 45 ; then
+  tell "Removing old kernels..."
+  sudo vkpurge rm all
+else
+  tell "Skipping vkpurge because /boot/efi is at ${efi_usage}% used."
+fi

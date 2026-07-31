@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Cleanup /var.
+
+cd /var/log
+if test -f Xorg.0.log.old ; then
+  tell "Removing Xorg.0.log.old"
+  sudo rm Xorg.0.log.old
+fi

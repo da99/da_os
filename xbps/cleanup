@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Cleanup /var, /boot/efi, etc.
+
+cleanup_var
+cleanup_pkg
+cleanup_boot
+

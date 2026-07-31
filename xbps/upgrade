@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Upgrade Void packages.
+
+cleanup
+
+sudo xbps-install -Su || {
+  sudo xbps-install -u xbps;
+  sudo xbps-install -Su;
+}
+

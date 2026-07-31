@@ -13,6 +13,13 @@ NetworkManager network-manager-applet  tailscale
 bluez blueman flameshot
   qbittorrent
   ghostty tmux
+  smplayer
+  thunderbird
+  lxappearance
+  arc-theme
+  tree
+  bat
+  fzf
 
 xfce4-docklike-plugin
  xfce4-cpufreq-plugin

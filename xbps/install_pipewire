@@ -19,6 +19,11 @@ fi
 
 cd "$XDG_CONFIG_HOME/pipewire/pipewire.conf.d"
 if [[ ! -e 10-wireplumber.conf ]]; then
-  tell "Linking conf file..."
+  tell "Linking wireplumber conf file..."
   ln -s /usr/share/examples/wireplumber/10-wireplumber.conf "$PWD/"
+fi
+
+if [[ ! -e 20-pipewire-pulse.conf ]]; then
+  tell "Linking pipewire-pulse conf file..."
+  ln -s /usr/share/examples/pipewire/20-pipewire-pulse.conf "$PWD/"
 fi

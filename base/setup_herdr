@@ -1,0 +1,100 @@
+#!/bin/zsh
+# install-herdr-latest.sh
+# Fetch latest Herdr release binary from GitHub based on uname
+# and install it to ~/.local/bin/herdr (or $HERDR_DEST if set).
+
+set -e -u -o pipefail
+
+REPO="ogulcancelik/herdr"
+API_URL="https://api.github.com/repos/${REPO}/releases/latest"
+# Detect OS and arch
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+
+latest() {
+    if ! command -v jq &>/dev/null ; then
+      err "jq not installed."
+      exit 1
+    fi
+    curl -q -fsSL "$API_URL" | jq -r '.tag_name'
+}
+
+# doc: CMD url|latest|install  -- Default: install
+case "$*" in
+  url)
+    echo "$API_URL"
+    exit 0
+    ;;
+
+  ''|install)
+    target="herdr $(latest | tr -d 'v')"
+    if [[ -x herdr ]]; then
+      current="$(./herdr --version)"
+      if [[ "$target" = "$current" ]]; then
+        tell "herdr already installed:"
+        echo "$current"
+        exit 0
+      fi
+    fi
+    ;;
+
+  latest)
+    latest
+    exit 0
+    ;;
+  *)
+    err "Unknown arguments: $*"
+    exit 1
+    ;;
+esac
+
+
+
+case "$OS" in
+Linux)
+  case "$ARCH" in
+  x86_64 | amd64)
+    ASSET_PREFIX="herdr-linux-x86_64"
+    ;;
+  aarch64 | arm64)
+    ASSET_PREFIX="herdr-linux-aarch64"
+    ;;
+  *)
+    echo "Unsupported arch for Herdr: $ARCH" >&2
+    exit 1
+    ;;
+  esac
+  ;;
+*)
+  echo "Unsupported OS for Herdr: $OS" >&2
+  exit 1
+  ;;
+esac
+
+echo "Detected OS=$OS ARCH=$ARCH → asset prefix=$ASSET_PREFIX"
+
+# Fetch latest release JSON and extract asset URL
+# Requires: curl, grep, sed
+ASSET_URL="$(curl -fsSL "$API_URL" |
+  grep "\"browser_download_url\"" |
+  grep "$ASSET_PREFIX" |
+  sed -E 's/.*"browser_download_url": *"([^"]+)".*/\1/' |
+  head -n1)"
+
+if [ -z "$ASSET_URL" ]; then
+  echo "Could not find asset for $ASSET_PREFIX in latest release" >&2
+  exit 1
+fi
+
+echo "Downloading: $ASSET_URL"
+
+TMP_FILE="tmp_herdr"
+curl -fsSL "$ASSET_URL" -o "$TMP_FILE"
+
+chmod +x "$TMP_FILE"
+
+mv -i "$TMP_FILE" "herdr"
+
+echo "Installed herdr to: $PWD"
+
+./herdr --version

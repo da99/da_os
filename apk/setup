@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+set -x
+setup_packages

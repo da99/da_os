@@ -14,7 +14,7 @@ ARCH="$(uname -m)"
 latest() {
     if ! command -v jq &>/dev/null ; then
       err "jq not installed."
-      exit 1
+      exit 2
     fi
     curl -q -fsSL "$API_URL" | jq -r '.tag_name'
 }

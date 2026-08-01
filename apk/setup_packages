@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+set -x
+doas apk add jq

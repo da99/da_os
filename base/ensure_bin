@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD binary_file
+
+command -v "$1" 2>/dev/null >/dev/null || {
+  err "Required: $1"
+  exit 1
+}

@@ -18,6 +18,7 @@ bluez blueman flameshot
   ghostty tmux
   smplayer mpv
   thunderbird
+  rsync
   lxappearance
   arc-theme
   breeze-gtk breeze-icons

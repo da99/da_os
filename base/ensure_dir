@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD dir_path
+
+if [ ! -d "$1" ]; then
+  err "Directory not found: $1"
+  exit 1
+fi

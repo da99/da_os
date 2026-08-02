@@ -21,3 +21,5 @@ case "$output" in
   doas setcap 'cap_net_bind_service=+ep' "$caddy_bin"
   ;;
 esac
+
+setup_caddy_config

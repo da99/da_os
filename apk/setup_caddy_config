@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+role="www_app"
+origin="$HOME/config/caddy"
+target="/home/$role/config/caddy"
+
+ensure_dir "$origin"
+ensure_bin rsync
+
+tell "Checking existence of: $target"
+if ! doas test -d "$target" ; then
+  tell "Creating: $target"
+  doas install -d -o "$role" -g "$role" "$target"
+fi
+
+tell "Syncing files..."
+doas rsync -avc --itemize-changes --chown="$role":"$role" "$origin/" "$target/"

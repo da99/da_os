@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD (''|validate)
+
+setup_user_www_app
+
+tell "Installing packages ..."
+doas apk add caddy libcap-getcap
+
+caddy_bin="$(which caddy)"
+output="$(getcap "$caddy_bin")"
+case "$output" in
+*"caddy cap_net_bind_service=ep"*)
+  tell "Capabilities: $output"
+  ;;
+*)
+  tell "Running: caddy cap_net_bind_service=ep"
+  doas setcap 'cap_net_bind_service=+ep' "$caddy_bin"
+  ;;
+esac

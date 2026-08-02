@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD ('')
+
+target='www_app'
+
+if getent group "$target" >/dev/null 2>&1; then
+  tell "Group already exists: $target"
+else
+  tell "Creating system group: $target"
+  doas addgroup -S "$target"
+fi
+
+if id "$target" >/dev/null 2>&1; then
+  tell "User already exists: $target"
+else
+  doas adduser -S -D -G "$target" \
+    -h "/home/$target" \
+    -g "User for ${target}." \
+    -s /sbin/nologin \
+    "$target"
+  doas chmod go-rwx "/home/$target"
+  tell "Created system user: $target"
+fi
+
+if getent group | grep nogroup | grep "$target" >/dev/null 2>&1; then
+  tell "Removing: $target from nogroup"
+  doas delgroup "$target" nogroup
+fi
+
+if test -e "/home/$target"; then
+  tell "Already exists: /home/$target"
+else
+  tell "Creating: /home/$target"
+  doas mkdir -p "/home/$target"
+  doas chown "$target":"$target" "/home/$target"
+fi
+
+case "$(stat -c '%a' "/home/$target")" in
+"700") : ;;
+
+*)
+  tell "Changing permissions in /home/$target"
+  doas chmod 0700 "/home/$target"
+  ;;
+esac

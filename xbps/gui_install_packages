@@ -19,6 +19,7 @@ bluez blueman flameshot
   smplayer mpv
   thunderbird
   rsync
+  base-devel
   lxappearance
   arc-theme
   breeze-gtk breeze-icons

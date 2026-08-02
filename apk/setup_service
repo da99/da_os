@@ -1,0 +1,92 @@
+#!/usr/bin/env sh
+
+set -u -e -o pipefail
+
+# doc: CMD init.d(/level) service_name path/to/original/file
+
+case "$*" in
+"-h" | "--help")
+  this="$(basename "$0")"
+  echo "$this -h|--help -- This message."
+  echo "$this init.d(/level) service_name path/old_file "
+  echo "$this conf.d         service_name path/old_file "
+  echo "$this level          name service_name"
+  echo "$this delete         service_name level"
+  echo "$this add            service_name level  dir/of/files/.openrc/.conf"
+  ;;
+
+"level "*)
+  level="$2"
+  name="$3"
+  if test -e "/etc/runlevels/$level/$name"; then
+    tell "Already installed: $name in $level"
+  else
+    tell "Adding $name to runlevel $level..."
+    doas rc-update add "$name" "$level"
+    tell "Status of $name service:"
+    rc-service "$name" status
+  fi
+  ;;
+
+"init.d/"*)
+  pair="$1"
+  shift
+  name="$1"
+  level="$(echo $pair | cut -d'/' -f2)"
+
+  "$0" init.d "$@"
+  "$0" level "$level" "$name"
+  ;;
+
+"delete "*)
+  name="$2"
+  level="$3"
+
+  t_file="/etc/runlevels/$level/$name"
+  if test -e "$t_file"; then
+    tell "Stopping: $t_file"
+    rc-service "$name" stop || :
+    tell "Removing: $t_file"
+    rc-update delete "$name" "$level"
+  else
+    tell "Already deleted: $t_file"
+  fi
+  ;;
+
+"add "*)
+  name="$2"
+  level="$3"
+  dir="$4"
+  old_conf="$dir/$name.conf"
+  old_rc="$dir/$name.openrc"
+
+  new_conf="/etc/conf.d/$name.conf"
+  new_rc="/etc/init.d/$name"
+
+  alp_cpi "$old_rc" "$new_rc" -m 744
+
+  if test -e "$old_conf"; then
+    alp_cpi "$old_conf" "$new_conf" -m 744
+  fi
+  ;;
+
+"init.d "* | "conf.d "*)
+  section="$1"
+  name="$2"
+  old_file="$3"
+  new_file="/etc/$section/$name"
+
+  if test -e "$new_file" && diff "$old_file" "$new_file" >/dev/null 2>&1; then
+    tell "Already installed: $new_file"
+    exit 0
+  fi
+
+  tell "Copying: $old_file -> $new_file"
+  doas install -m 744 "$old_file" "$new_file"
+  ;;
+
+*)
+  echo "!!! Unknown command: $*" >&2
+  exit 1
+  ;;
+esac

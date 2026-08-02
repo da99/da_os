@@ -25,3 +25,5 @@ fi
 
 tell "Syncing files..."
 doas rsync -avc --itemize-changes --chown="$role":"$role" "$origin/" "$target/"
+
+setup_service init.d/default "http_caddy" "$origin/initd.conf"

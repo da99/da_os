@@ -15,19 +15,6 @@ case "$*" in
   echo "$this add            service_name level  dir/of/files/.openrc/.conf"
   ;;
 
-"level "*)
-  level="$2"
-  name="$3"
-  if test -e "/etc/runlevels/$level/$name"; then
-    tell "Already installed: $name in $level"
-  else
-    tell "Adding $name to runlevel $level..."
-    doas rc-update add "$name" "$level"
-    tell "Status of $name service:"
-    rc-service "$name" status
-  fi
-  ;;
-
 "init.d/"*)
   pair="$1"
   shift
@@ -77,12 +64,25 @@ case "$*" in
   new_file="/etc/$section/$name"
 
   if test -e "$new_file" && diff "$old_file" "$new_file" >/dev/null 2>&1; then
-    tell "Already installed: $new_file"
+    tell "$section already installed: $new_file"
     exit 0
   fi
 
   tell "Copying: $old_file -> $new_file"
   doas install -m 744 "$old_file" "$new_file"
+  ;;
+
+"level "*)
+  level="$2"
+  name="$3"
+  if test -e "/etc/runlevels/$level/$name"; then
+    tell "$name already in level: $level"
+  else
+    tell "Adding $name to runlevel $level..."
+    doas rc-update add "$name" "$level"
+    tell "Status of $name service:"
+    rc-service "$name" status
+  fi
   ;;
 
 *)

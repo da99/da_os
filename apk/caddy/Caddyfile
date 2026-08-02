@@ -1,0 +1,31 @@
+{
+	admin unix//home/www_app/caddy/admin.sock
+	auto_https disable_redirects
+	email da+acme_ssl@miniuni.com
+}
+
+(safely) {
+	@origin header Origin {host}
+	header @origin {
+		Access-Control-Allow-Origin "{host}"
+		Access-Control-Allow-Methods "HEAD,GET"
+	}
+	header * {
+		-Server
+		Content-Security-Policy "default-src 'self' ; font-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self';"
+		Cross-Origin-Embedder-Policy "require-corp"
+		Cross-Origin-Opener-Policy "same-origin-allow-popups"
+		Cross-Origin-Resource-Policy "same-origin"
+		Strict-Transport-Security max-age=31536000;
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+	}
+
+	respond / "{args[0]}: -->  Not ready." 200
+	respond "Not found" 404
+}
+
+dev.local {
+	import safely "dev.local"
+}
+

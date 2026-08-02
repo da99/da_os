@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# === Setting up services for boot runlevel
+rc-update add networking boot
+rc-update add urandom boot
+
+# === Setting up services for default runlevel
+rc-update add acpid default
+rc-update add crond default
+
+# === Starting services
+rc-service urandom start
+rc-service acpid start
+rc-service crond start
+

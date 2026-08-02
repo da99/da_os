@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+export TZ="${TZ:-America/Chicago}"
+tell "=== Setting up timezone: $TZ"
+setup-timezone -z $TZ
+
+if test -e /etc/runlevels/default/ntpd ; then
+  tell "NTPD is already setup to sync time."
+else
+  tell "Setting up clock using ntp..."
+  doas setup-ntp busybox
+fi

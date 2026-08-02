@@ -1,0 +1,44 @@
+#!/sbin/openrc-run
+supervisor=supervise-daemon
+
+: ${c_prefix:="/home/www_app/caddy"}
+: ${pid_txt:="$c_prefix/pid.txt"}
+: ${caddy_opts:="--config $c_prefix/Caddyfile --adapter caddyfile"}
+
+output_log="$c_prefix/stdout.log"
+error_log="$c_prefix/stderr.log"
+
+name="Customized: caddy web server"
+description="Caddy web server for www_app"
+description_checkconfig="Check configuration"
+description_reload="Reload configuration without downtime"
+
+
+command=/usr/sbin/caddy
+command_args="run $caddy_opts"
+command_user=www_app:www_app
+extra_commands="checkconfig"
+extra_started_commands="reload"
+capabilities="^cap_net_bind_service"
+
+depend() {
+	need localmount
+}
+
+checkconfig() {
+	ebegin "Checking configuration for $name"
+	doas su -s /bin/sh ${command_user%:*} -c "$command validate $caddy_opts"
+	eend $?
+}
+
+reload() {
+	ebegin "Reloading $name"
+	doas su -s /bin/sh ${command_user%:*} -c "$command reload $caddy_opts"
+	eend $?
+}
+
+stop_pre() {
+	if [ "$RC_CMD" = restart ]; then
+		checkconfig || return $?
+	fi
+}

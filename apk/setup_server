@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+set -x
+setup_server_packages
+setup_server_services
+
+setup_time
+
+tell "Setting up keyboard"
+setup-keymap us us
+
+tell "Removing extra TTYs"
+sed -i '/^tty[3-9].*tty[3-9]$/d' /etc/inittab

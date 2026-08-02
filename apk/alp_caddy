@@ -1,0 +1,72 @@
+#!/usr/bin/env sh
+#
+#
+set -u -e -o pipefail
+
+log() { echo "--- $*" >&2; }
+
+case "$*" in
+  "-h"|"--help")
+    this="$(basename "$0")"
+    echo "$this -h|--help -- This message."
+    echo "$this setup"
+    echo "$this validate"
+    ;;
+
+  setup)
+    alp_www_app setup
+    alp_www_app mkdir caddy
+
+    log "Installing packages ..."
+    doas apk add caddy libcap-getcap
+
+    ALP_DIR="$(alp_dir)"
+
+    OLD_FILE="$HOME/config/caddy/Caddyfile"
+    if ! test -e "$OLD_FILE" ; then
+      OLD_FILE="$ALP_DIR/config/caddy/Caddyfile"
+    fi
+
+    NEW_DIR="/home/www_app/caddy/"
+
+    cd "$(dirname "$OLD_FILE")"
+    log "Formatting $OLD_FILE:"
+    "$0" validate
+    cd
+
+    log "Checking current Caddyfile in $NEW_DIR"
+    if ! is_same "$OLD_FILE" "$NEW_DIR" ; then
+      log "Installing new Caddyfile into $NEW_DIR"
+      doas install -m 644 -o www_app -g www_app -D "$OLD_FILE" -t "$NEW_DIR"
+    fi
+
+    if test -e "$HOME/config/caddy/initd.conf" ; then
+      alp_rc init.d/default "http_caddy" "$HOME/config/caddy/initd.conf"
+    else
+      alp_rc init.d/default "http_caddy" "$ALP_DIR/config/caddy/rc_initd_http_caddy"
+    fi
+
+    caddy_bin="$(which caddy)"
+    output="$(getcap "$caddy_bin")"
+    case "$output" in
+      *"caddy cap_net_bind_service=ep"*)
+        log "Capabilities: $output"
+        ;;
+      *)
+        log "Running: caddy cap_net_bind_service=ep"
+        doas setcap 'cap_net_bind_service=+ep' "$caddy_bin"
+        ;;
+    esac
+    ;;
+
+  validate)
+    set -x
+    caddy fmt --overwrite
+    caddy validate
+    ;;
+
+  *)
+    echo "!!! Unknown command: $*" >&2
+    exit 1
+    ;;
+esac

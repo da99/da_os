@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+set -x
+
+doas apk add \
+  shadow \
+  mise \
+  libcap-setcap \
+  fish git htop zstd unzip \
+  neovim \
+  fzf ripgrep rsync eza \
+  zsh tmux bat \
+  caddy curl wget nss-tools \
+  tree trash-cli \
+  openssh tzdata vim htop doas htop tree \
+  pcre-dev libevent-dev pkgconf

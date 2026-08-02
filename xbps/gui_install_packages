@@ -20,7 +20,7 @@ bluez blueman flameshot
   thunderbird
   rsync
   base-devel
-  lxappearance
+  lxappearance trash-cli
   arc-theme
   breeze-gtk breeze-icons
   tree

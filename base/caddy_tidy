@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+set -x
+ensure_dir config/caddy
+caddy fmt --overwrite config/caddy/Caddyfile
+caddy validate --config config/caddy/Caddyfile

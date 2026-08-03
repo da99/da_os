@@ -5,4 +5,4 @@ set -u -e
 
 # doc: CMD  ...args...
 
-printf -- '--> \033[1;38;5;202mWARNING:\033[0m %s\n' "$*"
+printf -- '--> \033[1;38;5;202mWARNING:\033[0m %s\n' "$*" >&2

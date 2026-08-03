@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+set -x
+sudo -u postgres ls -al "/progs/pg/$PG_VERSION/tmp/"
+sudo -u postgres cat "/progs/pg/$PG_VERSION/tmp/log.log"

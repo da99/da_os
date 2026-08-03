@@ -1,0 +1,95 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+
+# doc: CMD schemas|files|all files|setup files
+# doc: CMD reset
+# doc: CMD up (postgres)
+# doc: CMD drop
+# doc: CMD setup db app [name]
+
+case "$*" in
+
+  "schemas")
+    find "pg/$PGDATABASE" -mindepth 1 -maxdepth 1 -type d | cut -d'/' -f3 | sort --human-numeric-sort | cut -d'-' -f2-
+    ;;
+
+  "files")
+    find "pg/$PGDATABASE" -type f -path '*.pgsql' | sort --human-numeric-sort
+    ;;
+
+  "all files")
+    find pg -maxdepth 3 -mindepth 3 -type f -path '*.pgsql' | sort --human-numeric-sort
+    ;;
+
+  "setup files")
+    find pg -type f -path '*/setup.pgsql' | sort --human-numeric-sort
+    ;;
+
+  "reset")
+    ensure_is_dev
+    "$0" drop
+    echo
+    "$0" up
+    ;;
+
+  'up postgres')
+    ensure_is_dev
+    ensure_dir "pg/postgres"
+
+    export PGUSER="postgres"
+    export PGDATABASE="postgres"
+
+    "$0" run "*.pgsql"
+
+    echo
+    echo " ===\033[32m $PGDATABASE DONE UPPING \033[0m===" >&2
+    ;;
+
+  'up')
+    ensure_is_dev
+    ensure_dir "pg/$PGDATABASE"
+
+    if test "$PGDATABASE" != 'postgres' && test -e 'pg/postgres' ; then
+      PGDATABASE=postgres "$0" up
+    fi
+
+    export PGUSER="postgres"
+
+    "$0" run "*.pgsql"
+
+    echo
+    echo " ===\033[32m $PGDATABASE DONE UPPING \033[0m===" >&2
+    ;;
+
+  'drop')
+    ensure_is_dev
+
+    tell "Dropping database: $PGDATABASE"
+    export PGUSER='postgres'
+    export PGDATABASE='postgres'
+    "$0" psql --command="DROP DATABASE IF EXISTS $PGDATABASE;"
+    tell "=== DONE DROPPING ==="
+    ;;
+
+  "setup db app "*)
+    new_app="$4"
+
+    tell "Creating db app: $new_app"
+
+    sudo -u postgres createuser --no-createdb --encrypted --pwprompt --no-inherit ${new_app}_user
+    sudo -u postgres createdb  --encoding=UTF8 --locale=en_US.UTF-8  --owner=${new_app}_user ${new_app}_db
+    warn "Edit pg_hba.conf if you get peer auth errors: "
+    echo "http://serverfault.com/questions/484787/why-is-postgres-not-starting"
+    # echo -e "\n\n==== Update passwrd of superuser: password postgres , CTRL-D"
+    # doas -u postgres psql postgres
+    # doas -u postgres psql ${new_app}_db  -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
+    ;;
+esac
+
+
+
+
+

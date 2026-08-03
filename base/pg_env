@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+echo "-- --------- PG VARS -------------- --"
+echo "PGUSER:     $PGUSER"
+echo "PGDATABASE: $PGDATABASE"
+echo "PGHOST=$PGHOST"
+echo "PGDATA=$PGDATA"
+echo "-- ------- MY_PG VARS ------------- --"
+echo "PG_HOME:    $PG_HOME"
+echo "PG_VERSION: $PG_VERSION"
+echo "THIS BIN:   $(realpath "$0")"
+echo "PWD:        $PWD"
+echo "pgrep count: $(pgrep -f -a postgres | wc -l)"
+echo "-- -------------------------------- --"
+if test -e /progs/pg; then
+  find /progs/pg/ -maxdepth 1 -mindepth 1 -type d
+fi
+echo "-- -------------------------------- --"

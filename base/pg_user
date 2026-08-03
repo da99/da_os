@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# Create system group
+if getent group postgres &>/dev/null ; then
+  tell "postgres group exists."
+else
+  tell "Creating postgres group"
+  addgroup -S postgres
+fi
+
+if id "postgres" &>/dev/null  ; then
+  tell "User already exists: postgres"
+else
+  tell "Creating user: postgres ..."
+  # -S System user
+  # -D No password
+  adduser \
+  -S -D -G postgres \
+  -h /home/postgres \
+  -g "PostgreSQL Administrator" \
+  -s /bin/sh \
+  postgres
+fi
+
+chmod go-rwx /home/postgres
+
+# From: https://stackoverflow.com/questions/18431285/check-if-a-user-is-in-a-group-in-bash
+in_group () {
+  id -nG "$2" 2>/dev/null | grep -qzxF "$1"
+}
+
+for x in "$USER" www_app ; do
+  if in_group postgres "$x" ; then
+    tell "Already in group postgres: $x"
+  else
+    tell "Adding user, '$x', to group postgres ..."
+    usermod -aG postgres "$x"
+  fi
+done

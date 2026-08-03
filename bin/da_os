@@ -3,6 +3,13 @@
 #
 set -u -e -o pipefail
 
+
+# Prevent endless loop if we call "da_os ..."
+# before we reach end of this file:
+if [[ -n "${DA_OS_DIR:-}" ]] ; then
+  exec "$@"
+fi
+
 if test -e ".env" ; then
   set -a
   source ".env"
@@ -93,6 +100,12 @@ export DA_OS_PATH
 PATH="$PATH:$DA_OS_PATH"
 
 export PG_VERSION="${PG_VERSION:-18}"
+export PGUSER="${PGUSER:-www_app}"
+export PGDATABASE="${PGDATABASE:-$(pg_default_db)}"
+
+if is_dev ; then
+  export PG_COLOR=auto
+fi
 
 if test -d /data ; then
   export PGDATA="${PGDATA:-/data/pgsql/data}"
@@ -101,8 +114,10 @@ else
   export PGDATA="${PGDATA:-/progs/pg/$PG_VERSION/data}"
   export PGHOST="${PGHOST:-/progs/pg/$PG_VERSION/tmp}"
   export PG_HOME="${PG_HOME:-/progs/pg}"
-  if ! [[ -d /progs/ ]] ; then
-    warn "/progs and /data do not exist."
+  if ! is_dev ; then
+    if [[ ! -d /progs/ ]] ; then
+      warn "/progs and /data do not exist."
+    fi
   fi
 fi
 
@@ -110,8 +125,10 @@ if [[ -d /home/postgres ]] ; then
   export PG_HOME="${PG_HOME:-/home/postgres}"
 else
   export PG_HOME="${PG_HOME:-/progs/postgres}"
-  if ! [[ -d "$PG_HOME" ]] ; then
-    warn "$PG_HOME do not exist."
+  if ! "$DA_OS_DIR"/base/is_dev ; then
+    if [[ ! -d "$PG_HOME" ]] ; then
+      warn "$PG_HOME do not exist."
+    fi
   fi
 fi
 

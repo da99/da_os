@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+if test -z "$PGDATABASE"; then
+  err "Default database not found."
+  exit 2
+fi
+
+echo "$PGDATABASE"

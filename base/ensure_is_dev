@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+test -n "$IS_DEV" || {
+  err "Not a dev. machine."
+  exit 2
+}

@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+set -x
+psql -lqt 2>/dev/null | cut -d \| -f 1 | grep -wq "$PGDATABASE"

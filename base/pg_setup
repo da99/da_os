@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+MAIN_DB_DIR="$(readlink -m "$(realpath "$0")"/../..)"
+APP_DIR="$PWD"
+cd "$MAIN_DB_DIR"
+set -x
+sudo PGHOST="$PGHOST" PGDATABASE="postgres" -u "postgres" "$PG_DIR"/bin/psql --file="pg/setup.pgsql"
+
+cd "$APP_DIR"
+while read -r the_file ; do
+  tell "Running setup file: $the_file"
+  PGUSER=postgres PGDATABASE="postgres" "$0" psql --file="$PWD/$the_file"
+done < <("$0" setup files)

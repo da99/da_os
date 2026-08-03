@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD ('*.pgsql') -- Run file sin pg/ directory.
+
+pg_db_is_required
+
+file_pattern="${1:-'*.pgsql'}"
+shift
+
+args="$@"
+tell "Database: $PGDATABASE"
+tell "User:     $PGUSER"
+while read -r FILENAME ; do
+  tell "Running: $FILENAME $@"
+  "$0" psql --file="$FILENAME" "$@"
+done < <(find "$PWD/pg/$PGDATABASE/" -type f -path "$file_pattern" | sort --human-numeric-sort)

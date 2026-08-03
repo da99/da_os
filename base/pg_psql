@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+cd /progs/pg/"$PG_VERSION"
+echo "--- in $PWD:" >&2
+set -x
+sudo PGHOST="$PGHOST" PGDATABASE="$PGDATABASE" -u "$PGUSER" "$PWD"/bin/psql -v ON_ERROR_STOP=on "$@"

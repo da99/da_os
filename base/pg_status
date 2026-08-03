@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+cd /progs/pg/"$PG_VERSION"
+echo "--- in $PWD:"
+set -x
+sudo -u postgres "$PWD"/bin/pg_ctl -D "$THIS_DIR"/config/pg."$PG_VERSION"/ status

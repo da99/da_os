@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+_llvmver=21
+sudo xbps-install -S \
+  tzdata \
+  libpqxx libpqxx-devel \
+  postgresql-libs \
+  clang$_llvmver \
+  icu-devel \
+  llvm$_llvmver \
+  liblz4-devel \
+  openssl-devel \
+  libzstd-devel \
+  bison \
+  docbook-xsl \
+  flex \
+  libxml2-devel \
+  linux-headers \
+  llvm$_llvmver-devel \
+  libldap-devel \
+  pcre2-devel \
+  python3-devel \
+  readline-devel \
+  tcl-devel \
+  util-linux-libs \
+  zlib-devel

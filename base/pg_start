@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+cd "$PG_DIR"
+if ! test -e tmp; then
+  tell "Creating $PWD/tmp for postgres owner:"
+  sudo -u postgres mkdir tmp
+fi
+
+tell "in $PWD:"
+log_file="$PWD"/tmp/log.log
+
+tell "Checking/removing old log_file: $log_file"
+if sudo -u postgres test -e "$log_file"; then
+  sudo -u postgres rm "$log_file"
+fi
+sudo -u postgres "$PG_BIN"/pg_ctl -D "$PG_HOME/data" -l "$log_file" start

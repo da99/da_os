@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+cd "$PG_DIR"
+tell "in $PWD:"
+set -x
+sudo -u postgres "$PG_BIN/pg_ctl" -D "$PG_HOME/data" --mode=smart stop

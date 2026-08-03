@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+
+test -e pg || {
+  warn "No pg/ directory found."
+  echo "postgres"
+  exit 0
+}
+find pg -mindepth 1 -maxdepth 1 -type d | cut -d'/' -f2 | grep -v -w 'postgres' | head -n1

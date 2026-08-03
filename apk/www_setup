@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+origin="$HOME/config/www"
+ensure_dir "$origin"
+set -x
+setup_service init.d/default "http_www" "$origin/initd.conf"

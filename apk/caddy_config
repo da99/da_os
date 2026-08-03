@@ -11,8 +11,8 @@ ensure_dir "$origin"
 ensure_bin rsync
 
 
-tell "Syncing files..."
-if ! diff "$origin/Caddyfile" "$target/Caddyfile" ; then
+tell "Checking Caddyfile..."
+if ! doas diff "$origin/Caddyfile" "$target/Caddyfile" ; then
   tell "Installing Caddyfile"
   doas install -m 640 -o caddy -g caddy "$origin/Caddyfile" "$target/Caddyfile"
 fi

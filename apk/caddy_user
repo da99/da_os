@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD -- Creates caddy user.
+
+if ! id caddy &>/dev/null ; then
+  echo "--- Creating: caddy" >&2
+  doas addgroup -S caddy
+  doas adduser -G caddy -D -S caddy
+fi

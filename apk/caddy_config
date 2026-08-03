@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+role="caddy"
+origin="$HOME/config/caddy"
+target="/var/lib/caddy"
+
+ensure_dir "$origin"
+ensure_bin rsync
+
+
+tell "Syncing files..."
+if ! diff "$origin/Caddyfile" "$target/Caddyfile" ; then
+  tell "Installing Caddyfile"
+  doas install -m 640 -o caddy -g caddy "$origin/Caddyfile" "$target/Caddyfile"
+fi
+
+setup_service init.d/default "http_caddy" "$origin/initd.conf"

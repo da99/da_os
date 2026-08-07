@@ -12,3 +12,7 @@ sudo xbps-install -Su || {
   sudo xbps-install -Su;
 }
 
+export NIXPKGS_ALLOW_UNFREE=1
+nix-channel --update
+nix-env -u
+

@@ -6,12 +6,13 @@ set -u -e
 # doc: CMD -- Installs packages for a GUI desktop.
 packages=$(
   cat <<'EOF'
-fish-shell htop git nemo xorg
+fish-shell htop nemo xorg
  alacritty sxhkd ripgrep neovim zsh feh elogind dbus eza nix
 wmctrl xtitle xdotool xwininfo wget curl
 xclip picom pipewire libspa-bluetooth
 NetworkManager network-manager-applet  tailscale
 bluez blueman flameshot
+  git gitk
   xdg-utils atril
   openbox obconf lxappearance-obconf obmenu-generator
   qbittorrent rofi

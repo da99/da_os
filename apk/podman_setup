@@ -31,7 +31,7 @@ fi
 for x in subuid subgid ; do
   target="/etc/$x"
   origin="$HOME/config/root/etc_$x"
-  if test -e "$origin" ; then
+  if ! test -e "$origin" ; then
     err "Not found: $origin"
     exit 1
   fi

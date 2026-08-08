@@ -11,8 +11,10 @@ fi
 
 upgrade
 
-tell "Installing podman-related packages..."
-doas apk add podman crun fuse-overlayfs slirp4netns iptables
+if ! command -v podman || ! command -v crun ; then
+  tell "Installing podman-related packages..."
+  doas apk add podman crun fuse-overlayfs slirp4netns iptables
+fi
 
 cgroups_setup
 

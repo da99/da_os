@@ -23,7 +23,7 @@ if ! { rc-update show | grep cgroups; } ; then
   doas rc-update add cgroups default
 fi
 
-if ! rc-service --ifstopped cgroups ; then
+if rc-service --ifstopped cgroups ; then
   tell 'Starting service: cgroups'
   doas rc-service cgroups start
 fi

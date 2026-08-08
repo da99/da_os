@@ -16,10 +16,12 @@ doas apk add podman crun fuse-overlayfs slirp4netns iptables
 
 cgroups_setup
 
-if ! grep '^containers:' /etc/subuid /etc/subgid ; then
-  tell "Setting up containers non-root aacount..."
+if ! id "containers" ; then
+  tell "Setting up containers (non-root aacount)..."
   doas adduser -D -s /bin/sh containers
+fi
 
+if ! grep '^containers:' /etc/subuid /etc/subgid ; then
   tell "Setting up subordinate ID ranges for rootless user namespace mapping."
   doas touch /etc/subuid /etc/subgid
   printf '%s\n' 'containers:100000:65536' | doas tee -a /etc/subuid

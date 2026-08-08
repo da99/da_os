@@ -3,15 +3,13 @@
 #
 set -u -e -o pipefail
 
-
 if ! grep -E '^https.+/community' /etc/apk/repositories ; then
   err 'Enable community repository.'
   exit 1
 fi
 
-upgrade
-
 if ! command -v podman || ! command -v crun ; then
+  upgrade
   tell "Installing podman-related packages..."
   doas apk add podman crun fuse-overlayfs slirp4netns iptables
 fi

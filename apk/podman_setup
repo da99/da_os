@@ -34,7 +34,7 @@ target="/etc/modules-load.d/tun.conf"
 if ! test -e "$target" ; then
   tell "Addig tun to /etc/modules"
   echo "tun" > tun.conf
-  install -o root -g root tun.conf "$target"
+  doas install -o root -g root tun.conf "$target"
 fi
 
 

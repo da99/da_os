@@ -18,12 +18,26 @@ upgrade
 tell "Installing podman-related packages..."
 doas apk add podman crun fuse-overlayfs slirp4netns iptables
 
-if ! rc-service --exists cgroups ; then
+if ! { rc-update show | grep cgroups; } ; then
   tell 'Adding service: cgroups'
-  doas rc-update add cgroups
+  doas rc-update add cgroups default
+fi
+
+if ! rc-service --ifstopped cgroups ; then
   tell 'Starting service: cgroups'
   doas rc-service cgroups start
 fi
+
+output="$(stat -fc %T /sys/fs/cgroup)"
+case "$output" in
+  cgroup2fs)
+    :
+    ;;
+  *)
+    err "/sys/fs/cgroup is not cgroup2fs. It is: ${output}. Try rebooting."
+    exit 1
+    ;;
+esac
 
 if ! modprobe tun ; then
   err "Failed: modprobe tun"
@@ -41,16 +55,6 @@ if ! test -e "$target" ; then
 fi
 
 
-output="$(stat -fc %T /sys/fs/cgroup)"
-case "$output" in
-  cgroup2fs)
-    :
-    ;;
-  *)
-    err "/sys/fs/cgroup is not cgroup2fs. Try rebooting."
-    exit 1
-    ;;
-esac
 
 
 if ! grep '^containers:' /etc/subuid /etc/subgid ; then

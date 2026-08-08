@@ -8,8 +8,11 @@ if ! { rc-update show | grep cgroups; } ; then
   doas rc-update add cgroups default
 fi
 
-tell 'Starting service: cgroups'
-doas rc-service --ifstopped cgroups start
+tell 'Status of cgroups service:'
+if ! rc-service cgroups status ; then
+  tell 'Starting service: cgroups'
+  doas rc-service cgroups start
+fi
 
 
 if ! grep -q '^rc_cgroup_mode="unified"' /etc/rc.conf ; then

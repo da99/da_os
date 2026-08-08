@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+do_update=""
+for x in subuid subgid; do
+  target="/etc/$x"
+  origin="$HOME/config/root/etc_$x"
+  if ! test -e "$origin"; then
+    err "Not found: $origin"
+    exit 1
+  fi
+
+  if ! diff "$origin" "$target"; then
+    tell "Installing: $target ..."
+    sudo install -o root -g root "$origin" "$target"
+  fi
+done
+
+if ! test -z "$do_update"; then
+  tell "Running: podman system migrate"
+  podman system migrate
+fi

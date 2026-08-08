@@ -33,6 +33,7 @@ for x in subuid subgid ; do
   origin="$HOME/config/root/etc_$x"
   if test -e "$origin" ; then
     err "Not found: $origin"
+    exit 1
   fi
 
   if ! diff "$origin" "$target" ; then

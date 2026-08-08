@@ -3,13 +3,9 @@
 #
 set -u -e -o pipefail
 
+
 if ! grep -E '^https.+/community' /etc/apk/repositories ; then
   err 'Enable community repository.'
-  exit 1
-fi
-
-if ! grep -q '^rc_cgroup_mode="unified"' /etc/rc.conf ; then
-  err "/etc/rc.conf must have: rc_cgroup_mode=unified"
   exit 1
 fi
 
@@ -18,44 +14,7 @@ upgrade
 tell "Installing podman-related packages..."
 doas apk add podman crun fuse-overlayfs slirp4netns iptables
 
-if ! { rc-update show | grep cgroups; } ; then
-  tell 'Adding service: cgroups'
-  doas rc-update add cgroups default
-fi
-
-if rc-service --ifstopped cgroups ; then
-  tell 'Starting service: cgroups'
-  doas rc-service cgroups start
-fi
-
-output="$(stat -fc %T /sys/fs/cgroup)"
-case "$output" in
-  cgroup2fs)
-    :
-    ;;
-  *)
-    err "/sys/fs/cgroup is not cgroup2fs. It is: ${output}. Try rebooting."
-    exit 1
-    ;;
-esac
-
-if ! modprobe tun ; then
-  err "Failed: modprobe tun"
-  exit 1
-fi
-
-target="/etc/modules-load.d/tun.conf"
-if ! test -e "$target" ; then
-  tell "Addig tun to /etc/modules"
-  cd "$DA_OS_DIR"
-  mkdir -p tmp
-  cd tmp
-  echo "tun" > tun.conf
-  doas install -o root -g root tun.conf "$target"
-fi
-
-
-
+cgroups_setup
 
 if ! grep '^containers:' /etc/subuid /etc/subgid ; then
   tell "Setting up containers non-root aacount..."
@@ -67,3 +26,4 @@ if ! grep '^containers:' /etc/subuid /etc/subgid ; then
   printf '%s\n' 'containers:100000:65536' | doas tee -a /etc/subgid
 fi
 
+tun_setup

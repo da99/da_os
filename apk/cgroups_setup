@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+if ! { rc-update show | grep cgroups; } ; then
+  tell 'Adding service: cgroups'
+  doas rc-update add cgroups default
+fi
+
+tell 'Starting service: cgroups'
+doas rc-service --ifstopped cgroups start
+
+
+if ! grep -q '^rc_cgroup_mode="unified"' /etc/rc.conf ; then
+  err "/etc/rc.conf must have: rc_cgroup_mode=unified"
+  exit 1
+fi
+
+output="$(stat -f -c "%t" /sys/fs/cgroup)"
+case "$output" in
+  63677270)
+    :
+    ;;
+  *)
+    err 'stat -f -c "%t" /sys/fs/cgroup should be 63677270.'
+    warn 'Try rebooting.'
+    exit 1
+    ;;
+esac
+
+# Verify cgroup v2 reliably across BusyBox / Alpine environments
+if grep -q "cgroup2" /proc/self/mountinfo; then
+  tell "cgroup v2 verified successfully via mountinfo."
+elif grep -q "cgroup2" /proc/filesystems; then
+  tell "cgroup v2 kernel support verified, but not mounted yet."
+  exit 1
+else
+  err "cgroup v2 is not supported or active."
+  exit 1
+fi

@@ -9,3 +9,5 @@ new_user="www-containers"
 
 tell "Creating system user: $new_user"
 doas adduser -S -D -s /sbin/nologin "$new_user"
+
+ensure_perms 700 "/home/$new_user"

@@ -3,7 +3,7 @@
 #
 set -u -e
 
-# doc: CMD 7xx DIR -- Ensures directory has right perms.
+# doc: CMD 7xx DIR -- Upserts dir/file with right perms.
 
 right_perms="$1"
 target="$2"

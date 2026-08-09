@@ -5,7 +5,7 @@ set -u -e -o pipefail
 
 # doc: CMD -- Sets up pipewire.
 
-if ! command -v pipewire; then
+if ! is_command pipewire; then
   tell "Installing pipewire"
   sudo xbps-install -S pipewire
 fi

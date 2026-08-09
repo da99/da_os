@@ -23,12 +23,12 @@ case "$(stat -c '%a' "$target")" in
     exit 0
   fi
 
-  if command -v sudo; then
+  if is_command sudo; then
     sudo chmod "$right_perms" "$target"
     exit 0
   fi
 
-  if command -v doas; then
+  if is_command doas; then
     doas chmod "$right_perms" "$target"
     exit 0
   fi

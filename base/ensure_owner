@@ -17,12 +17,12 @@ fi
 
 tell "Changing ownership: $new_owner -> $target"
 
-if command -v doas >/dev/null; then
+if is_command doas ; then
   doas chown "$new_owner" "$target"
   exit 0
 fi
 
-if command -v sudo >/dev/null; then
+if is_command sudo ; then
   sudo chown "$new_owner" "$target"
   exit 0
 fi

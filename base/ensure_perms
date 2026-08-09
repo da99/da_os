@@ -13,23 +13,27 @@ ensure_exists "$target"
 case "$(stat -c '%a' "$target")" in
 "$right_perms")
   tell "$target is $right_perms"
+  exit 0
   ;;
 
 *)
   tell "Changing permissions of $target to ${right_perms}..."
   if is_owner "$USER" "$target"; then
     chmod "$right_perms" "$target"
-  else
-    if command -v sudo; then
-      sudo chmod "$right_perms" "$target"
-    fi
-
-    if command -v doas; then
-      sudo chmod "$right_perms" "$target"
-    else
-      err "No sudo or doas found."
-      exit 1
-    fi
+    exit 0
   fi
+
+  if command -v sudo; then
+    sudo chmod "$right_perms" "$target"
+    exit 0
+  fi
+
+  if command -v doas; then
+    sudo chmod "$right_perms" "$target"
+    exit 0
+  fi
+
+  err "No sudo or doas found."
+  exit 1
   ;;
 esac

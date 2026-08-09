@@ -1,15 +1,27 @@
-#!/bin/sh
+#!/bin/zsh
 #
 #
-set -u -e
+set -u -e -o pipefail
 
-# doc: CMD  USERNAME  DIR  -- Exits 0 if owner of DIR == USERNAME. Exits 1 otherwise.
+# doc: CMD  [owner|owner:group]  DIR  -- Exits 0 if owner of DIR == USERNAME. Exits 1 otherwise.
 
-target_owner="$1"
+new_owner="$1"
 target="$2"
 
-test -e "$target"
+ensure_exists "$target"
 
-current_owner="$(stat -c '%U' "$target")"
+# current_owner="$(stat -c '%U' "$target")"
+#
+# [ "$current_owner" = "$new_owner" ]
 
-[ "$current_owner" = "$target_owner" ]
+case "$new_owner" in
+*:*)
+  current_owner="$(stat -c "%U:%G" "$target")"
+  [[ "$new_owner" = "$current_owner" ]]
+  ;;
+
+*)
+  current_owner="$(stat -c '%U' "$target")"
+  [[ "$new_owner" = "$current_owner" ]]
+  ;;
+esac

@@ -1,0 +1,31 @@
+#!/bin/zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD [owner|owner:group] dir/file -- Upserts ownership.
+
+new_owner="$1"
+target="$2"
+
+ensure_exists "$target"
+
+if is_owner "$new_owner" "$target"; then
+  tell "Already proper owner: $new_owner -> $target"
+  exit 0
+fi
+
+tell "Changing ownership: $new_owner -> $target"
+
+if command -v doas >/dev/null; then
+  doas chown "$new_owner" "$target"
+  exit 0
+fi
+
+if command -v sudo >/dev/null; then
+  sudo chown "$new_owner" "$target"
+  exit 0
+fi
+
+err "Unable to find sudo or doas."
+exit 1

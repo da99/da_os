@@ -8,10 +8,7 @@ set -u -e
 right_perms="$1"
 target="$2"
 
-test -e "$target" || {
-  err "Does not exist: $target"
-  exit 1
-}
+ensure_exists "$target"
 
 case "$(stat -c '%a' "$target")" in
 "$right_perms")

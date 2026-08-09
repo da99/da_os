@@ -4,6 +4,13 @@
 set -u -e
 
 set -x
-ensure_dir config/caddy
-caddy fmt --overwrite config/caddy/Caddyfile
-caddy validate --config config/caddy/Caddyfile
+
+if test -e "Caddyfile"; then
+  target="Caddyfile"
+else
+  target="config/caddy/Caddyfile"
+fi
+
+ensure_exists "$target"
+caddy fmt --overwrite "$target"
+caddy validate --config "$target"

@@ -14,7 +14,7 @@ ensure_bin rsync
 tell "Checking Caddyfile..."
 if ! doas diff "$origin/Caddyfile" "$target/Caddyfile" ; then
   tell "Installing Caddyfile"
-  doas install -m 640 -o caddy -g caddy "$origin/Caddyfile" "$target/Caddyfile"
+  doas install -m 0644 -o root -g root "$origin/Caddyfile" "$target/Caddyfile"
 fi
 
 setup_service init.d/default "http_caddy" "$origin/initd.conf"

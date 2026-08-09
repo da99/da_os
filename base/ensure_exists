@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+target="$1"
+
+if test -e "$target"; then
+  exit 0
+fi
+
+err "Does not exist: $target"
+exit 1

@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+id "$1" >/dev/null 2>&1

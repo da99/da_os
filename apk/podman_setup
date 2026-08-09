@@ -14,12 +14,10 @@ if ! command -v podman || ! command -v crun ; then
   doas apk add podman crun fuse-overlayfs slirp4netns iptables
 fi
 
+user_containers
+
 cgroups_setup
 
-if ! id "containers" ; then
-  tell "Setting up containers (non-root aacount)..."
-  doas adduser -D -s /bin/sh containers
-fi
 
 sub_id_maps
 

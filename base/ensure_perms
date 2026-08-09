@@ -20,7 +20,16 @@ case "$(stat -c '%a' "$target")" in
   if is_owner "$USER" "$target"; then
     chmod "$right_perms" "$target"
   else
-    sudo chmod "$right_perms" "$target"
+    if command -v sudo; then
+      sudo chmod "$right_perms" "$target"
+    fi
+
+    if command -v doas; then
+      sudo chmod "$right_perms" "$target"
+    else
+      err "No sudo or doas found."
+      exit 1
+    fi
   fi
   ;;
 esac

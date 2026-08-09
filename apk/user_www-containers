@@ -5,9 +5,9 @@ set -u -e -o pipefail
 
 new_user="www-containers"
 
-! is_a_user "$new_user" || exit 0
-
-tell "Creating system user: $new_user"
-doas adduser -S -D -s /sbin/nologin "$new_user"
+if ! is_a_user "$new_user" ; then
+  tell "Creating system user: $new_user"
+  doas adduser -S -D -s /sbin/nologin "$new_user"
+fi
 
 ensure_perms 700 "/home/$new_user"

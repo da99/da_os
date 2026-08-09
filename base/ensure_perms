@@ -29,7 +29,7 @@ case "$(stat -c '%a' "$target")" in
   fi
 
   if command -v doas; then
-    sudo chmod "$right_perms" "$target"
+    doas chmod "$right_perms" "$target"
     exit 0
   fi
 

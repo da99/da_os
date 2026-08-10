@@ -10,7 +10,7 @@ if { ! command -v podman || ! command -v passwd; } >/dev/null ; then
   sudo xbps-install -S podman shadow passt
 fi
 
-sub_id_maps
+podman_id_maps
 
 output="$(sysctl user.max_user_namespaces | tr -d ' ' | cut -d'=' -f2)"
 if test -z "$output" || [[ "$output" < 15017 ]] ; then

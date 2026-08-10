@@ -18,7 +18,6 @@ user_containers
 
 cgroups_setup
 
-
-sub_id_maps
+podman_id_maps
 
 # tun_setup

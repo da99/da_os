@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+if command -v sudo >/dev/null; then
+  echo sudo
+  exit 0
+fi
+
+if command -v doas >/dev/null; then
+  echo sudo
+  exit 0
+fi
+
+echo "privilege_escalation_does_not_exist"
+exit 1

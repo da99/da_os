@@ -1,0 +1,45 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+errors=""
+
+podman_list_users | while IFS= read -r user; do
+    printf '\n== %s ==\n' "$user"
+
+    if ! id "$user" >/dev/null 2>&1; then
+        echo "SKIP: user does not exist"
+        continue
+    fi
+
+    if [[ "$user" = "$USER" ]] ; then
+      output=$(podman unshare cat /proc/self/uid_map || echo error)
+    else
+      output=$("$(which_do)" -u "$user" sh -c 'podman unshare cat /proc/self/uid_map' || echo error)
+    fi
+
+    case "$output" in 
+      error)
+        err "podman unshare failed for user: $user"
+        continue
+        ;;
+    esac
+
+
+    map_lines=$(printf '%s\n' "$output" | awk '
+        /^[[:space:]]*[0-9]+[[:space:]]+[0-9]+[[:space:]]+[0-9]+[[:space:]]*$/ {
+            count++
+        }
+        END { print count + 0 }
+    ')
+
+    if [ "$map_lines" = 2 ]; then
+        tell "OK: subordinate UID mapping is active"
+    else
+        err "podman id maps not setup for user: $user"
+        errors+=" $user"
+    fi
+done
+
+test -z "$errors" || exit 1

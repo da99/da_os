@@ -12,7 +12,9 @@ for x in subuid subgid; do
     exit 1
   fi
 
-  if ! diff "$origin" "$target"; then
+  if diff "$origin" "$target"; then
+    tell "Up-to-date: $target"
+  else
     tell "Installing: $target ..."
     doas install -o root -g root "$origin" "$target"
     do_update="1"

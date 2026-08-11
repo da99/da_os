@@ -9,7 +9,7 @@ if command -v sudo >/dev/null; then
 fi
 
 if command -v doas >/dev/null; then
-  echo sudo
+  echo doas
   exit 0
 fi
 

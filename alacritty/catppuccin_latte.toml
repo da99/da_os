@@ -121,3 +121,6 @@ mouse = "Right"
 
 [selection]
 save_to_clipboard = false
+
+[env]
+NVIM_BACKGROUND = "light"

@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+tell "Downloading: $*"
+
+if is_command curl; then
+  curl --silent --show-error --remote-name "$@"
+  exit 0
+fi
+
+if is_command wget; then
+  wget --no-verbose --content-disposition "$@"
+  exit 0
+fi
+
+err "No curl or wget found."
+exit 1

@@ -3,3 +3,6 @@ import = [
   "~/.config/alacritty/alacritty.toml",
   "/apps/da_os/alacritty/github-light.toml",
 ]
+
+[env]
+NVIM_BACKGROUND = "light"

@@ -29,3 +29,6 @@ blue = "#218bff"
 magenta = "#a475f9"
 cyan = "#3192aa"
 white = "#8c959f"
+
+[env]
+NVIM_BACKGROUND = "light"

@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+# -*- bash -*-
+#
+#
+#
+set -u -e
+
+case "$*" in
+*.gz*)
+  set -x
+  tar xzvf "$@"
+  ;;
+
+*.bz2*)
+  set -x
+  tar xvjf "$@"
+  ;;
+
+*.zip*)
+  set -x
+  unzip "$@"
+  ;;
+
+*)
+  echo "Unknown file type: $@" 1>&2
+  exit 1
+  ;;
+esac

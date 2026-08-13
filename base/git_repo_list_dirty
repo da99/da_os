@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+the_message="$(cat "$DA_OS_DIR"/config/git.status.message.txt)"
+while read -r DIR ; do
+  cd "$DIR"
+  if test "$(git status)" != "$the_message" ; then
+    echo "$DIR"
+  fi
+done < <(git_repo_list)
+

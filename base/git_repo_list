@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+for x in /apps /progs ; do
+  [[ -d "$x" ]] || continue
+
+  for dir in "$x"/*(N/); do
+    [[ -d "$dir/.git" ]] || continue
+    echo "$dir"
+  done
+done
+
+if test -e "$HOME"/.git ; then
+  echo "$HOME"
+fi

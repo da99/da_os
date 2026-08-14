@@ -7,8 +7,8 @@ set -u -e
 a="/etc/subuid"
 b="/etc/subgid"
 
-ensure_exists "$a"
-ensure_exists "$b"
+must_exist "$a"
+must_exist "$b"
 
 if ! diff "$a" "$b" ; then
   err "Files: do not match: $a != $b"

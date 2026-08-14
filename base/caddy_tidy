@@ -11,6 +11,6 @@ else
   target="config/caddy/Caddyfile"
 fi
 
-ensure_exists "$target"
+must_exist "$target"
 caddy fmt --overwrite "$target"
 caddy validate --config "$target"

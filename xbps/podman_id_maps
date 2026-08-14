@@ -7,7 +7,7 @@ do_update=""
 for x in subuid subgid; do
   target="/etc/$x"
   origin="$HOME/config/root/etc_$x"
-  ensure_exists "$origin"
+  must_exist "$origin"
 
   if diff "$origin" "$target"; then
     tell "Up-to-date: $target"

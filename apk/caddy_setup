@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 #
 #
 set -u -e -o pipefail
@@ -8,7 +8,7 @@ set -u -e -o pipefail
 tell "Installing packages ..."
 doas apk add caddy libcap-getcap
 
-caddy_bin="$(which caddy)"
+# caddy_bin="$(which caddy)"
 # output="$(getcap "$caddy_bin")"
 # case "$output" in
 # *"caddy cap_net_bind_service=ep"*)

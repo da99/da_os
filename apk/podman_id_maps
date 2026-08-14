@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+do_update=""
+
+for x in subuid subgid; do
+  target="/etc/$x"
+
+  origin="$HOME/config/podman/etc_$x"
+  must_exist "$origin"
+
+  if ! diff "$origin" "$target"; then
+    tell "Installing: $target ..."
+    doas install -o root -g root "$origin" "$target"
+    do_update="yes"
+  fi
+done
+
+[ "$do_update" = '' ] || check_podman_id_maps

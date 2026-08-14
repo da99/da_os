@@ -14,10 +14,8 @@ for x in subuid subgid; do
   else
     tell "Installing: $target ..."
     "$(which_do)" install -o root -g root "$origin" "$target"
-    do_update="1"
+    do_update="yes"
   fi
 done
 
-if ! test -z "$do_update"; then
-  check_podman_id_maps
-fi
+[ "$do_update" = "" ] || check_podman_id_maps

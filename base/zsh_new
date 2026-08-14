@@ -16,9 +16,9 @@ case "$*" in
   da_os must_not_exist "$new_file"
 
   cat <<'EOF' >"$new_file"
-#!/bin/sh
+#!/bin/zsh
 #
-set -u -e
+set -u -e -o pipefail
 
 # doc: CMD
 
@@ -31,9 +31,9 @@ EOF
   da_os must_not_exist "$new_file"
 
   cat <<'EOF' >"$new_file"
-#!/bin/sh
+#!/bin/zsh
 #
-set -u -e
+set -u -e -o pipefail
 
 case "$*" in
 # doc: CMD -- This help message.

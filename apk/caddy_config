@@ -1,20 +1,24 @@
 #!/usr/bin/env zsh
 #
-#
+# doc: CMD -- Uses:
+#      CADDY_USER   = www-containers
+#      CADDY_VOLUME = caddy-config
+
 set -u -e -o pipefail
 
-role="caddy"
-origin="$HOME/config/caddy"
-target="/var/lib/caddy"
+CADDY_USER="${CADDY_USER:-www-containers}"
+CADDY_VOLUME="${CADDY_VOLUME:-caddy-config}"
 
-ensure_dir "$origin"
-ensure_bin rsync
+origin="$HOME/config/caddy/Caddyfile"
+must_exist "$origin"
 
+target="$(caddy_get_volume_mount "$CADDY_USER" "$CADDY_VOLUME")/_data/Caddyfile"
 
-tell "Checking Caddyfile..."
-if ! doas diff "$origin/Caddyfile" "$target/Caddyfile" ; then
-  tell "Installing Caddyfile"
-  doas install -m 0644 -o root -g root "$origin/Caddyfile" "$target/Caddyfile"
+tell "Checking Caddyfile: "
+
+if ! doas diff "$origin" "$target" ; then
+  tell "Installing Caddyfile: $target"
+  doas install -m 0600 -o "$CADDY_USER" -g "$CADDY_USER" "$origin" "$target"
 fi
 
-setup_service init.d/default "http_caddy" "$origin/initd.conf"
+# setup_service init.d/default "http_caddy" "$origin/initd.conf"

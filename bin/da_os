@@ -142,6 +142,7 @@ else
   fi
 fi
 
+export DA_SUB_CMD="$(basename "$1")"
 
 "$@"
 

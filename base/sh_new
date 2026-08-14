@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+#
+set -u -e
+
+# doc: CMD (bin) file/path
+
+case "$*" in
+'bin '*)
+  new_file="$2"
+  da_os must_not_exist "$new_file"
+
+  cat <<EOF >"$new_file"
+#!/bin/sh
+#
+set -u -e
+
+# doc: CMD
+
+EOF
+  chmod u+x "$new_file"
+  ;;
+
+'')
+  err "$DA_SUB_CMD: No file path specified for new file."
+  exit 2
+  ;;
+
+*)
+  new_file="$1"
+  cat <<EOF >"$new_file"
+#!/bin/sh
+#
+set -u -e
+
+case "\$*" in
+# doc: CMD -- This help message.
+"--help")
+    da_os sh_help "\$0"
+  ;;
+
+*)
+  echo "!!! Unknown command: \$*" >&2
+  exit 1
+  ;;
+esac
+EOF
+  chmod u+x "$new_file"
+  ;;
+esac

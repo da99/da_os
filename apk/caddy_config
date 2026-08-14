@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 #
-# doc: CMD -- Uses:
+# doc: CMD -- Installs Caddyfile to a podman volume. (_data/)
 #      CADDY_USER   = www-containers
 #      CADDY_VOLUME = caddy-config
 

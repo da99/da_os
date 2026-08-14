@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+#
+#
+set -u -e -o pipefail
+
+# doc: CMD [bin directory] [sub command] [..args]
+
+bin_dir="$1"
+shift
+
+sub_cmd="$1"
+shift
+
+files="$(find "$bin_dir" -maxdepth 4 -type f -name "$sub_cmd")"
+
+case "$(echo files | wc -l)" in
+  0)
+    printf '!!! Unknown command: %s\n' "$sub_cmd $*"
+    ;;
+
+  1)
+    export BIN_DIR="$bin_dir"
+    exec "$files" "$@"
+    exit 0
+    ;;
+
+  *)
+    printf '!!! Too many files found for command: %s\n' "$sub_cmd $*"
+    ;;
+esac

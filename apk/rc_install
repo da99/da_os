@@ -1,8 +1,9 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 set -u -e -o pipefail
 
 # doc: CMD init.d(/level) service_name path/to/original/file
+# doc:      Installs, but does not start, a rc service file.
 
 case "$*" in
 "-h" | "--help")

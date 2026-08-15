@@ -3,6 +3,7 @@
 #
 set -u -e
 
+# doc: CMD -- Installs necessary packages: shadow, tmux, etc.
 set -x
 
 doas apk add \

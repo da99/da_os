@@ -3,6 +3,8 @@
 #
 set -u -e -o pipefail
 
+# doc: CMD - Sets up necessary services: networking, crond. urandom, etc.
+
 # === Setting up services for boot runlevel
 rc-update add networking boot
 rc-update add urandom boot

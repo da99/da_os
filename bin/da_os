@@ -96,6 +96,8 @@ esac
 
 # echo "$target_os of $target_family" >&2
 
+
+
 export DA_OS_PATH
 PATH="$PATH:$DA_OS_PATH"
 
@@ -143,6 +145,23 @@ else
 fi
 
 export DA_SUB_CMD="$(basename "$1")"
+
+# Check if there is a clash of binary names
+#   within PATHS:
+case "$1" in
+  */*) # binary contains path, user knows what they want.
+    :
+    ;;
+  *)
+    target="$(command -v "$1" || :)"
+    da_target="$(PATH="$DA_OS_PATH:$PATH" command -v "$1" || :)"
+    if [[ -n "$target" && -n "$da_target" &&  "$target" !=  "$da_target" ]] ; then
+      err "Conflicting binary files: $target <-> $da_target"
+      err "Specify path to binary: $1"
+      exit 1
+    fi
+    ;;
+esac
 
 "$@"
 

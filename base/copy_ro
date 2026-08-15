@@ -23,6 +23,13 @@ case "$#" in
   ;;
 esac
 
+# if target is a directory, standardize to file path:
+case "$target" in
+*/)
+  target="${target}$(basename "$origin")"
+  ;;
+esac
+
 must_exit "$origin"
 dir_target="$(dirname "$target")"
 

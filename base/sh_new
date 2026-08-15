@@ -3,12 +3,39 @@
 #
 set -u -e
 
-# doc: CMD (bin) file/path
+# doc: CMD (bin|opt) file/path
 
 case "$*" in
 '')
   err "$DA_SUB_CMD: No file path specified for new file."
   exit 2
+  ;;
+
+'opt '*)
+  new_file="$2"
+  da_os must_not_exist "$new_file"
+
+  cat <<'EOF' >"$new_file"
+#!/bin/sh
+#
+set -u -e
+
+# doc: CMD (x|y)
+
+case "\$#" in
+    1)
+    ;;
+
+    2)
+    ;;
+
+    *)
+      err "Unknown arguments for \$0: $*"
+      exit 1
+    ;;
+esac
+EOF
+  chmod u+x "$new_file"
   ;;
 
 'bin '*)
@@ -21,7 +48,6 @@ case "$*" in
 set -u -e
 
 # doc: CMD
-
 EOF
   chmod u+x "$new_file"
   ;;

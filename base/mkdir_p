@@ -17,7 +17,7 @@ case "$#" in
   target_u="$1"
   target="$2"
   tell "Checking if $target exists for user $target_u"
-  doas -u "$target_u" zsh -c "
+  "$(which_do)" -u "$target_u" zsh -c "
     set -e -u -o pipefail
     if [[ ! -e '$target' ]] ; then
        echo '-- Creating $target for user $target_u ...' >&2

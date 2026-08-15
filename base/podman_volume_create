@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+set -u -e
+
+# doc: CMD (USER) VOLUME_NAME
+
+case "$#" in
+1)
+  user="$(whoami)"
+  target="$1"
+  ;;
+
+2)
+  user="$1"
+  target="$2"
+  ;;
+
+*)
+  ;;
+esac
+
+if [ "$user" = "$(whoami)" ]; then
+  if podman volume exists "$target"; then
+    tell "Podman volume already created: $target"
+  else
+    tell "Creating podman volume: $target"
+    podman volume create "$target"
+  fi
+  exit 0
+fi
+
+da_os tell "Checking if $target exists..."
+
+"$(which_do)" -u "$user" zsh -c "
+  set -e -u -o pipefail
+  if podman volume exists $target ; then
+    echo '-- Podman volume already created: $target for $user ...' >&2
+  else
+    echo '-- Creating podman volume $target for $user ...' >&2
+    podman volume create $user
+  fi
+"

@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+set -u -e
+
+# doc: CMD (Target User) FILE1 FILE2 -- Copy files and makes it read-only to everyone
+
+case "$#" in
+2)
+  target_o="$(whoami)"
+  origin="$1"
+  target="$2"
+  ;;
+
+3)
+  target_o="$1"
+  origin="$2"
+  target="$3"
+  ;;
+
+*)
+  err "Unknown arguments: $*"
+  exit 1
+  ;;
+esac
+
+must_exit "$origin"
+dir_target="$(dirname "$target")"
+
+if [ "$target_o" = "$(whoami)" ]; then
+  diff "$origin" "$target" || {
+    mkdir -p "$dir_target"
+    install -m 0400 -o "$target_o" -g "$target_o" "$origin" "$target"
+  }
+  exit 0
+fi
+
+tell "Checking diff: $origin -> $target"
+if doas diff "$origin" "$target"; then
+  tell "Already copied: $target"
+  exit 0
+fi
+
+tell "Upserting $dir_target"
+doas -u "$target_o" mkdir -p "$dir_target"
+
+tell "Copying file: $target"
+doas install -m 0400 -o "$target_o" -g "$target_o" "$origin" "$target"

@@ -82,7 +82,7 @@ case "$*" in
     tell "Adding $name to runlevel $level..."
     doas rc-update add "$name" "$level"
     tell "Status of $name service:"
-    doas rc-service "$name" status
+    doas rc-service "$name" status || : # Exits with error if service is not running.
   fi
   ;;
 

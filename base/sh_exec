@@ -13,18 +13,16 @@ shift
 
 files="$(find "$bin_dir" -maxdepth 4 -type f -name "$sub_cmd")"
 
-case "$(echo files | wc -l)" in
-  0)
-    printf '!!! Unknown command: %s\n' "$sub_cmd $*"
-    ;;
+if test -z "$files" ; then
+  err "!!! Unknown command: $sub_cmd $*"
+  exit 1
+fi
 
-  1)
-    export BIN_DIR="$bin_dir"
-    exec "$files" "$@"
-    exit 0
-    ;;
+if [[ "$(echo files | wc -l)" = "1" ]]; then
+  export BIN_DIR="$bin_dir"
+  exec "$files" "$@"
+  exit 0
+fi
 
-  *)
-    printf '!!! Too many files found for command: %s\n' "$sub_cmd $*"
-    ;;
-esac
+err "!!! Too many binaries found for command: $sub_cmd $*"
+exit 1

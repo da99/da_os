@@ -30,7 +30,7 @@ case "$target" in
   ;;
 esac
 
-must_exit "$origin"
+must_exist "$origin"
 dir_target="$(dirname "$target")"
 
 if [ "$target_o" = "$(whoami)" ]; then

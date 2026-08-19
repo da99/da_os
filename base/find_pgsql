@@ -1,7 +1,17 @@
-#!/bin/sh
+#!/bin/zsh
 #
-set -u -e
+set -u -e -o pipefail
 
 # doc: CMD [pattern for path]
 
-find pg/ -maxdepth 3 -mindepth 3 -name '*.pgsql' -and -path "$1" | sort
+found="no"
+
+while read -r file; do
+  echo "$file"
+  found="yes"
+done < <(find pg/ -maxdepth 3 -mindepth 3 -name '*.pgsql' -and -path "$1" | sort)
+
+if [ "$found" = "no" ]; then
+  err "No files found for pattern: $1"
+  exit 1
+fi
